@@ -1,0 +1,40 @@
+{
+	"id": "space_02_lensing",
+	"index": 2,
+	"geometry": {
+		"type": "sphere",
+		"scale": [20.0, 20.0, 20.0],
+		"subdivisions": 64
+	},
+	"shader": {
+		"name": "Lensing",
+		"parameters": {
+			"massPointX": 5.0,
+			"massPointY": 3.0,
+			"massPointZ": -4.0,
+			"maxDistortion": 0.15,
+			"falloffStart": 15.0,
+			"falloffEnd": 5.0
+		}
+	},
+	"audio": {
+		"stem": "ambient_drone_02",
+		"rule": "LensingAudio",
+		"parameters": {
+			"reverbMix": 0.4
+		}
+	},
+	"exit": {
+		"condition": "enterMassPoint",
+		"parameters": {
+			"massPointX": 5.0,
+			"massPointY": 3.0,
+			"massPointZ": -4.0,
+			"triggerRadius": 1.5
+		}
+	},
+	"nudge": {
+		"idleThresholdSeconds": 120,
+		"type": "colorPulse"
+	}
+}

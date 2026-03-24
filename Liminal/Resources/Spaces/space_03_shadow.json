@@ -1,0 +1,34 @@
+{
+	"id": "space_03_shadow",
+	"index": 3,
+	"geometry": {
+		"type": "open_field",
+		"scale": [60.0, 1.0, 60.0],
+		"subdivisions": 32
+	},
+	"shader": {
+		"name": "Shadow",
+		"parameters": {
+			"shadowIntensity": 0.7
+		}
+	},
+	"audio": {
+		"stem": "ambient_drone_03",
+		"rule": "ShadowAudio",
+		"parameters": {
+			"reverbMix": 0.3
+		}
+	},
+	"exit": {
+		"condition": "shadowAlignment",
+		"parameters": {
+			"grooveAngle": 0.785,
+			"toleranceRadians": 0.15,
+			"requiredDuration": 2.0
+		}
+	},
+	"nudge": {
+		"idleThresholdSeconds": 120,
+		"type": "shadowReveal"
+	}
+}
