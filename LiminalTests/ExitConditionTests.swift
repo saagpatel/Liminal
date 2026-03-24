@@ -197,7 +197,140 @@ final class ExitConditionTests: XCTestCase {
         XCTAssertEqual(condition.progress, 0.0, accuracy: 0.01)
     }
 
+    // MARK: - ConvergenceCondition
+
+    func testConvergenceTriggersWhenAllConditionsMet() {
+        // Use wider tolerances to guarantee overlap region exists in test
+        var wideCondition = ConvergenceCondition(
+            targetSpeed: 0.55,
+            speedTolerance: 0.08,
+            massPoint: SIMD3(3, 1.7, -3),
+            massPointRadius: 3.0,
+            interferenceSourceA: SIMD3(-5, 1.7, 0),
+            interferenceSourceB: SIMD3(5, 1.7, 0),
+            interferenceRadius: 3.0,  // widened for test
+            grooveAngle: 0.785,
+            angleTolerance: 0.4,  // widened for test
+            requiredDuration: 2.0
+        )
+        // Look direction that yields shadow angle ≈ 0.785
+        let lookDir = SIMD3<Float>(sin(Float.pi + 0.785), 0, -cos(Float.pi + 0.785))
+        // Position (1.5, 1.7, -1.5): dist to massPoint ≈ 2.12 ✓, dist to midpoint ≈ 2.12 ✓ (within 3.0)
+        let state = PlayerState(
+            position: SIMD3(1.5, 1.7, -1.5),
+            velocity: SIMD3(0, 0, 0.55),
+            speed: 0.55,
+            lookDirection: lookDir,
+            idleSeconds: 0,
+            deltaTime: 1.0
+        )
+        // Need to hold for requiredDuration=2.0s
+        XCTAssertFalse(wideCondition.evaluate(playerState: state, ruleOutput: .empty))  // 1s
+        XCTAssertTrue(wideCondition.evaluate(playerState: state, ruleOutput: .empty))   // 2s
+    }
+
+    func testConvergenceDoesNotTriggerWithWrongSpeed() {
+        var condition = ConvergenceCondition(
+            targetSpeed: 0.55,
+            speedTolerance: 0.08,
+            massPoint: SIMD3(0, 1.7, 0),
+            massPointRadius: 5.0,
+            interferenceSourceA: SIMD3(-5, 1.7, 0),
+            interferenceSourceB: SIMD3(5, 1.7, 0),
+            interferenceRadius: 5.0,
+            grooveAngle: 0.0,
+            angleTolerance: 1.0,
+            requiredDuration: 2.0
+        )
+        // Wrong speed: 0.9 (outside tolerance of 0.55 ± 0.08)
+        let state = makeState(speed: 0.9, deltaTime: 1.0)
+        XCTAssertFalse(condition.evaluate(playerState: state, ruleOutput: .empty))
+        XCTAssertFalse(condition.evaluate(playerState: state, ruleOutput: .empty))
+        XCTAssertFalse(condition.evaluate(playerState: state, ruleOutput: .empty))
+    }
+
+    func testConvergenceDoesNotTriggerWithWrongPosition() {
+        var condition = ConvergenceCondition(
+            targetSpeed: 0.55,
+            speedTolerance: 0.1,
+            massPoint: SIMD3(0, 1.7, 0),
+            massPointRadius: 1.0,  // small radius
+            interferenceSourceA: SIMD3(-5, 1.7, 0),
+            interferenceSourceB: SIMD3(5, 1.7, 0),
+            interferenceRadius: 0.5,  // small radius
+            grooveAngle: 0.0,
+            angleTolerance: 0.1,
+            requiredDuration: 2.0
+        )
+        // Position far from all targets
+        let state = makeState(position: SIMD3(10, 1.7, 10), speed: 0.55, deltaTime: 1.0)
+        XCTAssertFalse(condition.evaluate(playerState: state, ruleOutput: .empty))
+        XCTAssertFalse(condition.evaluate(playerState: state, ruleOutput: .empty))
+        XCTAssertFalse(condition.evaluate(playerState: state, ruleOutput: .empty))
+    }
+
+    func testConvergenceProgressSoftDecays() {
+        var condition = ConvergenceCondition(
+            targetSpeed: 0.55,
+            speedTolerance: 0.08,
+            massPoint: SIMD3(0, 1.7, 0),
+            massPointRadius: 5.0,
+            interferenceSourceA: SIMD3(-5, 1.7, 0),
+            interferenceSourceB: SIMD3(5, 1.7, 0),
+            interferenceRadius: 5.0,
+            grooveAngle: 0.0,
+            angleTolerance: Float.pi + 1.0,  // accept all angles
+            requiredDuration: 4.0
+        )
+        // lookDirection (0,0,1) → shadowAngle = atan2(0, 1) = 0, which matches grooveAngle=0
+        let satisfiedState = PlayerState(
+            position: .zero,
+            velocity: SIMD3(0, 0, 0.55),
+            speed: 0.55,
+            lookDirection: SIMD3(0, 0, 1),  // shadow angle = 0, within tolerance
+            idleSeconds: 0,
+            deltaTime: 1.0
+        )
+        // Accumulate 2 seconds
+        _ = condition.evaluate(playerState: satisfiedState, ruleOutput: .empty)
+        _ = condition.evaluate(playerState: satisfiedState, ruleOutput: .empty)
+        let progressAfterAccumulation = condition.progress
+        XCTAssertEqual(progressAfterAccumulation, 0.5, accuracy: 0.01)
+
+        // Now fail for 1 second — soft decay should leave progress > 0
+        let failState = PlayerState(
+            position: .zero,
+            velocity: SIMD3(0, 0, 0.9),
+            speed: 0.9,  // wrong speed
+            lookDirection: SIMD3(0, 0, 1),
+            idleSeconds: 0,
+            deltaTime: 1.0
+        )
+        _ = condition.evaluate(playerState: failState, ruleOutput: .empty)
+        let progressAfterDecay = condition.progress
+        // Decay: accumulated -= deltaTime * 0.5 = 2.0 - 0.5 = 1.5, progress = 1.5/4.0 = 0.375
+        XCTAssertGreaterThan(progressAfterDecay, 0.0,
+            "Progress should soft-decay, not snap to 0")
+        XCTAssertLessThan(progressAfterDecay, progressAfterAccumulation,
+            "Progress should decrease after failure")
+    }
+
     // MARK: - Helpers
+
+    private func makeConvergenceCondition() -> ConvergenceCondition {
+        ConvergenceCondition(
+            targetSpeed: 0.55,
+            speedTolerance: 0.08,
+            massPoint: SIMD3(3, 1.7, -3),
+            massPointRadius: 3.0,
+            interferenceSourceA: SIMD3(-5, 1.7, 0),
+            interferenceSourceB: SIMD3(5, 1.7, 0),
+            interferenceRadius: 1.5,
+            grooveAngle: 0.785,
+            angleTolerance: 0.25,
+            requiredDuration: 2.0
+        )
+    }
 
     private func makeState(
         position: SIMD3<Float> = .zero,

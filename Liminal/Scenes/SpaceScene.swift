@@ -101,6 +101,7 @@ final class SpaceScene {
         case "Interference":   return InterferenceRule(shaderParams: sp, audioParams: ap)
         case "ChromaticDecay": return ChromaticDecayRule(shaderParams: sp, audioParams: ap)
         case "Resonance":      return ResonanceRule(shaderParams: sp, audioParams: ap)
+        case "Convergence":    return ConvergenceRule(shaderParams: sp, audioParams: ap)
         default:               return DopplerRule(shaderParams: sp, audioParams: ap)
         }
     }
@@ -145,6 +146,22 @@ final class SpaceScene {
                 resonantSpeed: Float(p["resonantSpeed"] ?? 0.55),
                 speedTolerance: Float(p["speedTolerance"] ?? 0.05),
                 requiredDuration: Float(p["requiredDuration"] ?? 5.0)
+            ))
+        case "convergence":
+            return .convergence(ConvergenceCondition(
+                targetSpeed: Float(p["targetSpeed"] ?? 0.55),
+                speedTolerance: Float(p["speedTolerance"] ?? 0.08),
+                massPoint: SIMD3<Float>(
+                    Float(p["massPointX"] ?? 0), Float(p["massPointY"] ?? 0), Float(p["massPointZ"] ?? 0)),
+                massPointRadius: Float(p["massPointRadius"] ?? 3.0),
+                interferenceSourceA: SIMD3<Float>(
+                    Float(p["interferenceSourceAX"] ?? -5), Float(p["interferenceSourceAY"] ?? 1.7), Float(p["interferenceSourceAZ"] ?? 0)),
+                interferenceSourceB: SIMD3<Float>(
+                    Float(p["interferenceSourceBX"] ?? 5), Float(p["interferenceSourceBY"] ?? 1.7), Float(p["interferenceSourceBZ"] ?? 0)),
+                interferenceRadius: Float(p["interferenceRadius"] ?? 1.5),
+                grooveAngle: Float(p["grooveAngle"] ?? 0.785),
+                angleTolerance: Float(p["angleTolerance"] ?? 0.25),
+                requiredDuration: Float(p["requiredDuration"] ?? 2.0)
             ))
         default:
             #if DEBUG

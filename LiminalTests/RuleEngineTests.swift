@@ -196,6 +196,30 @@ final class RuleEngineTests: XCTestCase {
         XCTAssertTrue(engine.evaluate(playerState: resonant).exitTriggered)
     }
 
+    func testGenericExitWithConvergence() {
+        let engine = RuleEngine()
+        let rule = ConvergenceRule(shaderParams: [:], audioParams: [:])
+        let exitCondition = AnyExitCondition.convergence(
+            ConvergenceCondition(
+                targetSpeed: 0.55,
+                speedTolerance: 0.1,
+                massPoint: SIMD3(0, 0, 0),
+                massPointRadius: 5.0,
+                interferenceSourceA: SIMD3(-5, 0, 0),
+                interferenceSourceB: SIMD3(5, 0, 0),
+                interferenceRadius: 5.0,
+                grooveAngle: 0.0,
+                angleTolerance: Float.pi + 1.0,  // accept all look angles
+                requiredDuration: 2.0
+            )
+        )
+        engine.configure(rule: rule, exitCondition: exitCondition)
+
+        let satisfiedState = makePlayerState(speed: 0.55, deltaTime: 1.0)
+        XCTAssertFalse(engine.evaluate(playerState: satisfiedState).exitTriggered)  // 1s
+        XCTAssertTrue(engine.evaluate(playerState: satisfiedState).exitTriggered)   // 2s
+    }
+
     func testNudgeDoesNotActivateBelowThreshold() {
         let engine = RuleEngine()
         let rule = DopplerRule()

@@ -10,7 +10,7 @@ final class ShaderLabViewController: UIViewController {
 
     private let shaderNames = [
         "DopplerTest", "LensingTest", "ShadowTest",
-        "InterferenceTest", "ChromaticDecayTest", "ResonanceTest"
+        "InterferenceTest", "ChromaticDecayTest", "ResonanceTest", "ConvergenceTest"
     ]
     // Shaders that also have a geometry modifier (loaded alongside fragment)
     private let geometryShaderNames: Set<String> = ["ResonanceTest"]
@@ -78,7 +78,7 @@ final class ShaderLabViewController: UIViewController {
 
     private func setupShaderSelector() {
         shaderSegment = UISegmentedControl(
-            items: ["Dopp", "Lens", "Shad", "Intf", "Chrom", "Res"]
+            items: ["Dopp", "Lens", "Shad", "Intf", "Chrom", "Res", "Conv"]
         )
         shaderSegment.selectedSegmentIndex = 0
         shaderSegment.translatesAutoresizingMaskIntoConstraints = false

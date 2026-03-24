@@ -131,6 +131,51 @@ struct ResonantSpeedHeld: ExitCondition {
     }
 }
 
+// MARK: - ConvergenceCondition (Space 7: all 6 prior conditions simultaneously)
+
+struct ConvergenceCondition: ExitCondition {
+    // Sub-conditions with relaxed tolerances
+    let targetSpeed: Float        // resonant speed
+    let speedTolerance: Float     // wider than Space 6 (e.g. 0.08)
+    let massPoint: SIMD3<Float>   // lensing mass point
+    let massPointRadius: Float    // wider than Space 2 (e.g. 3.0)
+    let interferenceSourceA: SIMD3<Float>
+    let interferenceSourceB: SIMD3<Float>
+    let interferenceRadius: Float // wider than Space 4 (e.g. 1.5)
+    let grooveAngle: Float        // shadow groove angle
+    let angleTolerance: Float     // wider than Space 3 (e.g. 0.25)
+    let requiredDuration: Float   // how long ALL must be held (e.g. 2.0s)
+
+    private(set) var accumulatedSeconds: Float = 0
+    private(set) var currentProgress: Float = 0
+
+    var progress: Float { currentProgress }
+
+    mutating func evaluate(playerState: PlayerState, ruleOutput: RuleOutput) -> Bool {
+        // Check all 6 conditions simultaneously
+        let speedOK = abs(playerState.speed - targetSpeed) <= speedTolerance
+        let proximityOK = simd_distance(playerState.position, massPoint) <= massPointRadius
+        let midpoint = (interferenceSourceA + interferenceSourceB) / 2.0
+        let interferenceOK = simd_distance(playerState.position, midpoint) <= interferenceRadius
+        let shadowAngle = atan2(-playerState.lookDirection.x, playerState.lookDirection.z)
+        let angleDiff = abs(shadowAngle - grooveAngle)
+        let wrappedAngle = Swift.min(angleDiff, Float.pi * 2 - angleDiff)
+        let shadowOK = wrappedAngle <= angleTolerance
+        // Stillness: NOT required — convergence requires movement at resonant speed
+        // Doppler: implicitly satisfied by the speed check (speed > 0)
+
+        let allSatisfied = speedOK && proximityOK && interferenceOK && shadowOK
+
+        if allSatisfied {
+            accumulatedSeconds += playerState.deltaTime
+        } else {
+            accumulatedSeconds = Swift.max(0, accumulatedSeconds - playerState.deltaTime * 0.5)
+        }
+        currentProgress = Swift.min(accumulatedSeconds / requiredDuration, 1.0)
+        return accumulatedSeconds >= requiredDuration
+    }
+}
+
 // MARK: - AnyExitCondition (enum wrapper for type-safe storage)
 
 /// Wraps concrete ExitCondition structs so they can be stored mutably
@@ -142,6 +187,7 @@ enum AnyExitCondition: Sendable {
     case silencePoint(SilencePoint)
     case stillnessHeld(StillnessHeld)
     case resonantSpeedHeld(ResonantSpeedHeld)
+    case convergence(ConvergenceCondition)
 
     mutating func evaluate(playerState: PlayerState, ruleOutput: RuleOutput) -> Bool {
         switch self {
@@ -169,6 +215,10 @@ enum AnyExitCondition: Sendable {
             let result = c.evaluate(playerState: playerState, ruleOutput: ruleOutput)
             self = .resonantSpeedHeld(c)
             return result
+        case .convergence(var c):
+            let result = c.evaluate(playerState: playerState, ruleOutput: ruleOutput)
+            self = .convergence(c)
+            return result
         }
     }
 
@@ -180,6 +230,7 @@ enum AnyExitCondition: Sendable {
         case .silencePoint(let c): c.progress
         case .stillnessHeld(let c): c.progress
         case .resonantSpeedHeld(let c): c.progress
+        case .convergence(let c): c.progress
         }
     }
 }

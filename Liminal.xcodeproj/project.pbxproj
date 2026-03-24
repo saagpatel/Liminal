@@ -38,6 +38,7 @@
 		CFCE43C43C5C8A6B1F8295C4 /* LensingRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98DAF09108442A94B7CC2AE /* LensingRuleTests.swift */; };
 		D6A0297EC680B75F79918C88 /* ShaderLabApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934D3159FE32ADB347133901 /* ShaderLabApp.swift */; };
 		E227972F2B5F22FCD5C8DA3F /* AudioManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C6CA5DC33E1CE79596D69C /* AudioManagerTests.swift */; };
+		E988987857039FA71858EA70 /* ConvergenceRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABF3730F970F0A9BA0316E3 /* ConvergenceRuleTests.swift */; };
 		E9EE09FBD74E312E7033CCFC /* DopplerRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = C0CD6E1EFAC8D73C401E3E0F /* DopplerRule.swift */; };
 		EC8F9360381E291350A3144F /* InterferenceRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3DBC3FB95351419EEDDF144 /* InterferenceRule.swift */; };
 		EF39AEF564709176866A32AD /* ConvergenceRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = F6F603F94A5EB142FDEEA9B6 /* ConvergenceRule.swift */; };
@@ -59,6 +60,7 @@
 /* Begin PBXFileReference section */
 		036455BD940BDFBEDFC2B84E /* ShaderUniformBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShaderUniformBus.swift; sourceTree = "<group>"; };
 		0A37A518E464FA650E43CBFF /* TitleScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleScene.swift; sourceTree = "<group>"; };
+		0ABF3730F970F0A9BA0316E3 /* ConvergenceRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConvergenceRuleTests.swift; sourceTree = "<group>"; };
 		1DD6EACFDE9A1F7CE049F186 /* ChromaticDecayRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChromaticDecayRuleTests.swift; sourceTree = "<group>"; };
 		1F6C54F94390728F118471EE /* SCNNode+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNNode+Helpers.swift"; sourceTree = "<group>"; };
 		262138FA16863909F88E6667 /* LiminalShaderLab.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = LiminalShaderLab.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -230,6 +232,7 @@
 			children = (
 				72C6CA5DC33E1CE79596D69C /* AudioManagerTests.swift */,
 				1DD6EACFDE9A1F7CE049F186 /* ChromaticDecayRuleTests.swift */,
+				0ABF3730F970F0A9BA0316E3 /* ConvergenceRuleTests.swift */,
 				9330B88E2973365B660B5897 /* ExitConditionTests.swift */,
 				EB0F61AC3CA2D4632B193A89 /* InterferenceRuleTests.swift */,
 				D98DAF09108442A94B7CC2AE /* LensingRuleTests.swift */,
@@ -242,7 +245,7 @@
 			path = LiminalTests;
 			sourceTree = "<group>";
 		};
-		"TEMP_D5AE8F31-AD2C-4457-B8C6-76228B794381" /* Resources */ = {
+		"TEMP_EA4F038E-9371-4DCF-9414-EE93D864BC04" /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 			);
@@ -343,6 +346,7 @@
 			files = (
 				E227972F2B5F22FCD5C8DA3F /* AudioManagerTests.swift in Sources */,
 				7F9EE476C240E98AA10CA770 /* ChromaticDecayRuleTests.swift in Sources */,
+				E988987857039FA71858EA70 /* ConvergenceRuleTests.swift in Sources */,
 				CDF29FF221F0A9278CD9928E /* ExitConditionTests.swift in Sources */,
 				34098F7B0F2CBD39F0A84CF7 /* InterferenceRuleTests.swift in Sources */,
 				CFCE43C43C5C8A6B1F8295C4 /* LensingRuleTests.swift in Sources */,

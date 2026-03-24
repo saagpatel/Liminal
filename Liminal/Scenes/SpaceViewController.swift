@@ -1,5 +1,6 @@
 import UIKit
 import SceneKit
+import SpriteKit
 
 /// Main game view controller. Creates the SCNView, loads space definitions,
 /// wires gesture input, runs the per-frame game loop, and manages transitions.
@@ -15,7 +16,9 @@ final class SpaceViewController: UIViewController {
     private var transitionManager = TransitionManager()
     private var spaceDefinition: SpaceDefinition?
     private var currentSpaceIndex = 1
-    private let totalSpaces = 6  // Phase 3 supports Spaces 1–6
+    private let totalSpaces = 7  // All 7 spaces
+
+    private var settingsPanel: UIView?
 
     #if DEBUG
     private var debugOverlay: DebugOverlay?
@@ -30,8 +33,8 @@ final class SpaceViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .black
         setupSCNView()
-        loadSpace(index: currentSpaceIndex)
         setupGestures()
+        showTitle()  // show title before loading Space 1
 
         #if DEBUG
         setupDebugOverlay()
@@ -40,8 +43,8 @@ final class SpaceViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        startAudio()
         HapticManager.shared.start()
+        // Audio starts after title completes (in showTitle callback)
     }
 
     override func viewWillDisappear(_ animated: Bool) {
@@ -64,6 +67,25 @@ final class SpaceViewController: UIViewController {
         scnView.antialiasingMode = .multisampling4X
         scnView.delegate = self
         view.addSubview(scnView)
+    }
+
+    // MARK: - Title Screen
+
+    private func showTitle() {
+        let skView = SKView(frame: view.bounds)
+        skView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        skView.backgroundColor = .black
+        skView.tag = 999  // for removal
+        view.addSubview(skView)
+
+        let titleScene = TitleScene(size: view.bounds.size)
+        titleScene.scaleMode = .aspectFill
+        titleScene.onComplete = { [weak self] in
+            skView.removeFromSuperview()
+            self?.loadSpace(index: 1)
+            self?.startAudio()
+        }
+        skView.presentScene(titleScene)
     }
 
     private func loadSpace(index: Int) {
@@ -125,6 +147,10 @@ final class SpaceViewController: UIViewController {
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(handlePinch))
         pinch.delegate = self
         scnView.addGestureRecognizer(pinch)
+
+        let settingsTap = UITapGestureRecognizer(target: self, action: #selector(handleSettingsTap))
+        settingsTap.numberOfTapsRequired = 5
+        scnView.addGestureRecognizer(settingsTap)
     }
 
     @objc private func handleLookPan(_ gesture: UIPanGestureRecognizer) {
@@ -142,6 +168,93 @@ final class SpaceViewController: UIViewController {
 
     @objc private func handlePinch(_ gesture: UIPinchGestureRecognizer) {
         spaceScene?.playerController.handlePinch(scale: gesture.scale)
+    }
+
+    // MARK: - Hidden Settings Panel
+
+    @objc private func handleSettingsTap(_ gesture: UITapGestureRecognizer) {
+        let location = gesture.location(in: scnView)
+        // Only trigger in top-left 44×44pt corner
+        guard location.x < 44, location.y < 44 else { return }
+
+        if settingsPanel != nil {
+            dismissSettings()
+        } else {
+            showSettings()
+        }
+    }
+
+    private func showSettings() {
+        let panel = UIView(frame: CGRect(x: 20, y: 80, width: 280, height: 200))
+        panel.backgroundColor = UIColor.black.withAlphaComponent(0.85)
+        panel.layer.cornerRadius = 12
+
+        // Haptic toggle
+        let hapticLabel = UILabel(frame: CGRect(x: 16, y: 16, width: 150, height: 30))
+        hapticLabel.text = "Haptic Feedback"
+        hapticLabel.textColor = .white
+        hapticLabel.font = .systemFont(ofSize: 14)
+        panel.addSubview(hapticLabel)
+
+        let hapticSwitch = UISwitch(frame: CGRect(x: 220, y: 16, width: 0, height: 0))
+        hapticSwitch.isOn = HapticManager.shared.isEnabled
+        hapticSwitch.addTarget(self, action: #selector(hapticToggled), for: .valueChanged)
+        panel.addSubview(hapticSwitch)
+
+        // Volume slider
+        let volumeLabel = UILabel(frame: CGRect(x: 16, y: 60, width: 100, height: 30))
+        volumeLabel.text = "Volume"
+        volumeLabel.textColor = .white
+        volumeLabel.font = .systemFont(ofSize: 14)
+        panel.addSubview(volumeLabel)
+
+        let volumeSlider = UISlider(frame: CGRect(x: 100, y: 60, width: 164, height: 30))
+        volumeSlider.minimumValue = 0
+        volumeSlider.maximumValue = 1
+        volumeSlider.value = UserDefaults.standard.float(forKey: "liminal.volume").nonZeroOr(1.0)
+        volumeSlider.addTarget(self, action: #selector(volumeChanged), for: .valueChanged)
+        panel.addSubview(volumeSlider)
+
+        // Sensitivity slider
+        let sensitivityLabel = UILabel(frame: CGRect(x: 16, y: 104, width: 100, height: 30))
+        sensitivityLabel.text = "Sensitivity"
+        sensitivityLabel.textColor = .white
+        sensitivityLabel.font = .systemFont(ofSize: 14)
+        panel.addSubview(sensitivityLabel)
+
+        let sensitivitySlider = UISlider(frame: CGRect(x: 100, y: 104, width: 164, height: 30))
+        sensitivitySlider.minimumValue = 0.2
+        sensitivitySlider.maximumValue = 2.0
+        sensitivitySlider.value = UserDefaults.standard.float(forKey: "liminal.sensitivity").nonZeroOr(1.0)
+        sensitivitySlider.addTarget(self, action: #selector(sensitivityChanged), for: .valueChanged)
+        panel.addSubview(sensitivitySlider)
+
+        // Dismiss button
+        let dismissButton = UIButton(frame: CGRect(x: 16, y: 150, width: 248, height: 36))
+        dismissButton.setTitle("Done", for: .normal)
+        dismissButton.setTitleColor(.white.withAlphaComponent(0.7), for: .normal)
+        dismissButton.addTarget(self, action: #selector(dismissSettings), for: .touchUpInside)
+        panel.addSubview(dismissButton)
+
+        view.addSubview(panel)
+        settingsPanel = panel
+    }
+
+    @objc private func dismissSettings() {
+        settingsPanel?.removeFromSuperview()
+        settingsPanel = nil
+    }
+
+    @objc private func hapticToggled(_ sender: UISwitch) {
+        HapticManager.shared.isEnabled = sender.isOn
+    }
+
+    @objc private func volumeChanged(_ sender: UISlider) {
+        UserDefaults.standard.set(sender.value, forKey: "liminal.volume")
+    }
+
+    @objc private func sensitivityChanged(_ sender: UISlider) {
+        UserDefaults.standard.set(sender.value, forKey: "liminal.sensitivity")
     }
 
     // MARK: - Exit + Transitions
@@ -179,6 +292,14 @@ final class SpaceViewController: UIViewController {
         debugOverlay = overlay
     }
     #endif
+}
+
+// MARK: - Float helper
+
+private extension Float {
+    func nonZeroOr(_ fallback: Float) -> Float {
+        self == 0 ? fallback : self
+    }
 }
 
 // MARK: - SCNSceneRendererDelegate
