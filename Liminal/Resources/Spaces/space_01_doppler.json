@@ -1,0 +1,36 @@
+{
+	"id": "space_01_doppler",
+	"index": 1,
+	"geometry": {
+		"type": "corridor",
+		"scale": [40.0, 6.0, 4.0],
+		"subdivisions": 48
+	},
+	"shader": {
+		"name": "Doppler",
+		"parameters": {
+			"maxColorShift": 0.4,
+			"velocityThreshold": 0.3,
+			"transitionSpeed": 2.0
+		}
+	},
+	"audio": {
+		"stem": "ambient_drone_01",
+		"rule": "DopplerAudio",
+		"parameters": {
+			"maxPitchShiftSemitones": 3.0,
+			"reverbMix": 0.6
+		}
+	},
+	"exit": {
+		"condition": "velocityThresholdHeld",
+		"parameters": {
+			"targetVelocity": 0.85,
+			"durationSeconds": 3.0
+		}
+	},
+	"nudge": {
+		"idleThresholdSeconds": 90,
+		"type": "amplitudeFlare"
+	}
+}

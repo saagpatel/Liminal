@@ -1,0 +1,70 @@
+{
+	"id": "space_07_convergence",
+	"index": 7,
+	"geometry": {
+		"type": "open_field",
+		"scale": [40.0, 1.0, 40.0],
+		"subdivisions": 32
+	},
+	"shader": {
+		"name": "Convergence",
+		"parameters": {
+			"maxColorShift": 0.4,
+			"velocityThreshold": 0.3,
+			"transitionSpeed": 2.0,
+			"massPointX": 3.0,
+			"massPointY": 1.7,
+			"massPointZ": -3.0,
+			"maxDistortion": 0.15,
+			"falloffStart": 15.0,
+			"falloffEnd": 5.0,
+			"shadowIntensity": 0.7,
+			"sourceAX": -5.0,
+			"sourceAY": 1.7,
+			"sourceAZ": 0.0,
+			"sourceBX": 5.0,
+			"sourceBY": 1.7,
+			"sourceBZ": 0.0,
+			"waveFrequency": 8.0,
+			"maxDesaturationSeconds": 15.0,
+			"resaturationRate": 15.0,
+			"resonantSpeed": 0.55,
+			"falloffWidth": 0.15,
+			"maxAmplitude": 0.3,
+			"vibrationFrequency": 12.0
+		}
+	},
+	"audio": {
+		"stem": "ambient_drone_07",
+		"rule": "ConvergenceAudio",
+		"parameters": {
+			"reverbMix": 0.5,
+			"maxPitchShiftSemitones": 3.0
+		}
+	},
+	"exit": {
+		"condition": "convergence",
+		"parameters": {
+			"targetSpeed": 0.55,
+			"speedTolerance": 0.08,
+			"massPointX": 3.0,
+			"massPointY": 1.7,
+			"massPointZ": -3.0,
+			"massPointRadius": 3.0,
+			"interferenceSourceAX": -5.0,
+			"interferenceSourceAY": 1.7,
+			"interferenceSourceAZ": 0.0,
+			"interferenceSourceBX": 5.0,
+			"interferenceSourceBY": 1.7,
+			"interferenceSourceBZ": 0.0,
+			"interferenceRadius": 1.5,
+			"grooveAngle": 0.785,
+			"angleTolerance": 0.25,
+			"requiredDuration": 2.0
+		}
+	},
+	"nudge": {
+		"idleThresholdSeconds": 120,
+		"type": "colorPulse"
+	}
+}

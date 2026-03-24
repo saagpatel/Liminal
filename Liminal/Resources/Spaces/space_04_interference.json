@@ -1,0 +1,54 @@
+{
+	"id": "space_04_interference",
+	"index": 4,
+	"geometry": {
+		"type": "lattice",
+		"scale": [20.0, 6.0, 20.0],
+		"subdivisions": 16
+	},
+	"shader": {
+		"name": "Interference",
+		"parameters": {
+			"sourceAX": -6.0,
+			"sourceAY": 1.7,
+			"sourceAZ": 0.0,
+			"sourceBX": 6.0,
+			"sourceBY": 1.7,
+			"sourceBZ": 0.0,
+			"waveFrequency": 8.0
+		}
+	},
+	"audio": {
+		"stem": "ambient_drone_04",
+		"rule": "InterferenceAudio",
+		"parameters": {
+			"reverbMix": 0.5
+		},
+		"sources": [
+			{
+				"stem": "interference_tone_a",
+				"position": [-6.0, 1.7, 0.0]
+			},
+			{
+				"stem": "interference_tone_b",
+				"position": [6.0, 1.7, 0.0]
+			}
+		]
+	},
+	"exit": {
+		"condition": "silencePoint",
+		"parameters": {
+			"sourceAX": -6.0,
+			"sourceAY": 1.7,
+			"sourceAZ": 0.0,
+			"sourceBX": 6.0,
+			"sourceBY": 1.7,
+			"sourceBZ": 0.0,
+			"toleranceRadius": 0.5
+		}
+	},
+	"nudge": {
+		"idleThresholdSeconds": 120,
+		"type": "amplitudeFlare"
+	}
+}

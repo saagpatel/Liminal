@@ -1,0 +1,38 @@
+{
+	"id": "space_06_resonance",
+	"index": 6,
+	"geometry": {
+		"type": "sphere",
+		"scale": [18.0, 18.0, 18.0],
+		"subdivisions": 64
+	},
+	"shader": {
+		"name": "Resonance",
+		"parameters": {
+			"resonantSpeed": 0.55,
+			"falloffWidth": 0.15,
+			"maxAmplitude": 0.3,
+			"vibrationFrequency": 12.0
+		}
+	},
+	"audio": {
+		"stem": "ambient_drone_06",
+		"rule": "ResonanceAudio",
+		"parameters": {
+			"reverbMix": 0.5,
+			"maxPitchShiftSemitones": 2.0
+		}
+	},
+	"exit": {
+		"condition": "resonantSpeedHeld",
+		"parameters": {
+			"resonantSpeed": 0.55,
+			"speedTolerance": 0.05,
+			"requiredDuration": 5.0
+		}
+	},
+	"nudge": {
+		"idleThresholdSeconds": 90,
+		"type": "amplitudeFlare"
+	}
+}
