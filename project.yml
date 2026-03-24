@@ -29,6 +29,7 @@ targets:
       - path: Liminal/Resources
         buildPhase: resources
         type: folder
+      - path: Liminal/Support/PrivacyInfo.xcprivacy
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.liminal.app
