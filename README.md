@@ -1,96 +1,49 @@
-![Swift](https://img.shields.io/badge/Swift-6.0-FA7343?logo=swift&logoColor=white)
-![iOS](https://img.shields.io/badge/iOS-17.0%2B-000000?logo=apple&logoColor=white)
-![SceneKit](https://img.shields.io/badge/SceneKit-3D%20Rendering-blue)
-![Metal](https://img.shields.io/badge/Metal-GPU%20Shaders-A90000?logo=apple&logoColor=white)
-![License](https://img.shields.io/badge/license-MIT-green)
-
 # Liminal
+
+[![Swift](https://img.shields.io/badge/Swift-f05138?style=flat-square&logo=swift)](#) [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#)
 
 > Find the rule. Find the exit.
 
-Liminal is a first-person atmospheric exploration game for iPhone and iPad. Seven abstract spaces. No instructions. No HUD. Each space operates by a hidden rule — a relationship between your movement, the light, the sound, and the geometry around you. Discover the rule through observation and experimentation. Find the exit by mastering it.
+Liminal is a first-person atmospheric exploration game for iPhone and iPad. Seven abstract spaces. No instructions. No HUD. Each space operates by a hidden rule — a relationship between your movement, the light, the sound, and the geometry. Discover the rule through observation. Find the exit by mastering it.
 
-## How It Works
+## Features
 
-Every space is defined entirely by a JSON configuration that describes its geometry, shader, audio, and exit condition. At runtime, a `RuleEngine` evaluates your position, velocity, speed, and idle time on every frame, producing shader uniforms and audio parameters that respond in real time.
+- **Seven distinct spaces** — each defined by a unique rule: chromatic decay, convergence, Doppler-shifted audio, interference patterns, gravitational lensing, resonance, and shadow
+- **Metal shaders per space** — custom `.metal` shader for each rule; the shader and the Swift rule type share a common protocol, keeping logic and visuals in sync
+- **JSON-driven configuration** — all space geometry, shader parameters, audio, and exit conditions are defined in JSON, loaded at runtime
+- **Live rule evaluation** — a `RuleEngine` evaluates player position, velocity, speed, and idle time every frame, producing shader uniforms and audio parameters in real time
+- **AVAudioEngine audio** — spatial audio with real-time parameter modulation tied directly to movement and rule state
+- **No HUD, no instructions** — the entire game communicates through environmental feedback
 
-The seven rules include chromatic decay, convergence, Doppler-shifted audio, interference patterns, gravitational lensing, resonance, and shadow — each expressed as a Metal shader and a Swift rule type sharing a common protocol.
+## Quick Start
+
+### Prerequisites
+- Xcode 16+
+- iOS 17.0+ device or simulator
+
+### Installation
+```bash
+git clone https://github.com/saagpatel/Liminal
+open Liminal.xcodeproj
+```
+
+### Usage
+Build and run. Swipe to move, tilt to look. No other instructions — that's the game.
 
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
-| Language | Swift 6.0 (strict concurrency) |
+|-------|------------|
+| Language | Swift 6.0, strict concurrency |
 | 3D rendering | SceneKit |
-| GPU effects | Metal (custom `.metal` shaders per space) |
+| GPU effects | Metal (custom `.metal` shader per space) |
 | Audio | AVAudioEngine with real-time parameter modulation |
 | Configuration | JSON space definitions decoded at launch |
-| UI lifecycle | SwiftUI App + UIKit scene delegate |
-| Testing | XCTest unit tests (11 test files) |
-
-## Prerequisites
-
-- Xcode 16.0+
-- iOS 17.0+ device or simulator
-- [XcodeGen](https://github.com/yonaskolb/XcodeGen) 2.38+ (to regenerate the `.xcodeproj` from `project.yml`)
-
-## Getting Started
-
-```bash
-# Clone the repository
-git clone <repo-url>
-cd Liminal
-
-# Regenerate the Xcode project (if needed)
-xcodegen generate
-
-# Open in Xcode
-open Liminal.xcodeproj
-```
-
-Select the **Liminal** scheme, choose a simulator or connected device running iOS 17+, and press Run.
-
-To iterate on shaders in isolation, use the **LiminalShaderLab** scheme — a lightweight companion app that loads test Metal shaders without the full game runtime.
-
-## Project Structure
-
-```
-Liminal/
-├── Liminal/
-│   ├── App/               # @main entry point and AVAudioSession setup
-│   ├── Core/              # RuleEngine, SpaceLoader, AudioManager,
-│   │                      #   PlayerController, ShaderUniformBus
-│   ├── Scenes/            # SCNScene setup, SpaceViewController,
-│   │                      #   TitleScene, TransitionManager
-│   ├── Spaces/            # SpaceDefinition (Codable), ExitCondition,
-│   │                      #   and one Swift type per rule
-│   ├── Shaders/           # Ten .metal files (one per visual effect)
-│   └── Resources/         # JSON space definitions and audio assets
-├── LiminalShaderLab/      # Standalone shader development target
-├── LiminalTests/          # Unit tests for rules, engine, audio, and loader
-└── project.yml            # XcodeGen project spec
-```
 
 ## Architecture
 
-```
-[JSON Space Definitions]
-        ↓
-[SpaceLoader] → [SCNScene + Geometry] → [Metal Shader Modifiers]
-                        ↓
-              [PlayerController] ← [Touch Input]
-                        ↓
-              [RuleEngine] ← PlayerState (position, velocity, speed, idle)
-                   ↓              ↓
-         [ShaderUniformBus]   [AudioManager]
-              ↓                    ↓
-         [Metal GPU]          [AVAudioEngine]
-```
-
-## Screenshots
-
-<!-- Add screenshots here -->
+Each space is represented by a `SpaceDefinition` decoded from JSON, which references a shader name, a `RuleType` enum value, an audio preset, and an exit condition expression. At runtime, the `SpaceLoader` compiles the associated Metal shader into a `SCNProgram` and attaches it to the scene graph. The `RuleEngine` runs on `CADisplayLink` and writes a `simd_float4x4` uniform buffer that both the Metal shader and the AVAudioEngine parameter automation consume on the same tick, keeping visuals and audio synchronized without a separate message-passing step.
 
 ## License
 
-MIT License. Copyright © 2026 Saag Patel. See [LICENSE](LICENSE) for details.
+MIT
