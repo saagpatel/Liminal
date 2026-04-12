@@ -248,7 +248,7 @@
 			path = LiminalTests;
 			sourceTree = "<group>";
 		};
-		"TEMP_7661E938-C88D-4E81-96AC-45D4E5F84A2E" /* Resources */ = {
+		"TEMP_1C35BDAE-7A2D-4D4E-8C58-CBD11E4D819D" /* Resources */ = {
 			isa = PBXGroup;
 			children = (
 			);
@@ -320,6 +320,9 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastUpgradeCheck = 1600;
 				TargetAttributes = {
+					314A6FE0BA7CA5C7B546749C = {
+						DevelopmentTeam = 3TGZFKFNA4;
+					};
 				};
 			};
 			buildConfigurationList = 9E4CDB7650DC296C26B9708C /* Build configuration list for PBXProject "Liminal" */;
@@ -431,6 +434,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3TGZFKFNA4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -536,6 +540,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 3TGZFKFNA4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
