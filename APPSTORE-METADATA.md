@@ -96,9 +96,9 @@ Character count: 152
 
 | Field | URL |
 |---|---|
-| Support URL | https://[placeholder]/liminal/support |
+| Support URL | https://github.com/saagpatel/Liminal/issues |
 | Marketing URL | https://[placeholder]/liminal |
-| Privacy Policy URL | https://[placeholder]/liminal/privacy |
+| Privacy Policy URL | https://github.com/saagpatel/Liminal/blob/main/PRIVACY.md |
 
 *Replace with actual URLs before submission.*
 
