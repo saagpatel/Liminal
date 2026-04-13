@@ -190,3 +190,6 @@ The rule for Space 1 is: speed above approximately 0.85 normalized velocity, mai
 - [ ] App Review Notes: include Space 1 completion instructions and offer to provide full solution guide if needed to expedite review
 - [ ] TestFlight: 10 external testers, 8/10 solved Space 1 within 7 minutes, 0 crash reports
 - [ ] Performance verified: 60 fps on iPhone 13, ≥55 fps on iPhone 13 minimum per Instruments profiling
+
+## Copyright
+© 2026 saagpatel
