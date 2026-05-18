@@ -34,7 +34,8 @@ jobs:
           xcodebuild build \
             -scheme Liminal \
             -project Liminal.xcodeproj \
-            -destination 'generic/platform=iOS'
+            -destination 'generic/platform=iOS' \
+            CODE_SIGNING_ALLOWED=NO
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v4
