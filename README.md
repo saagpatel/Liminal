@@ -28,7 +28,7 @@ open Liminal.xcodeproj
 ```
 
 ### Usage
-Build and run. Swipe to move, tilt to look. No other instructions — that's the game.
+Build and run. Drag to look, two-finger drag to move, pinch to adjust speed. No other instructions — that's the game.
 
 ## Tech Stack
 
@@ -42,7 +42,7 @@ Build and run. Swipe to move, tilt to look. No other instructions — that's the
 
 ## Architecture
 
-Each space is represented by a `SpaceDefinition` decoded from JSON, which references a shader name, a `RuleType` enum value, an audio preset, and an exit condition expression. At runtime, the `SpaceLoader` compiles the associated Metal shader into a `SCNProgram` and attaches it to the scene graph. The `RuleEngine` runs on `CADisplayLink` and writes a `simd_float4x4` uniform buffer that both the Metal shader and the AVAudioEngine parameter automation consume on the same tick, keeping visuals and audio synchronized without a separate message-passing step.
+Each space is represented by a `SpaceDefinition` decoded from JSON, which references a shader name, a rule type, an audio preset, and an exit condition. At runtime, `SpaceScene` loads the Metal shader by name and attaches it as an `SCNShaderModifierEntryPointFragment` on the space material, keeping SceneKit's lighting pass intact. The `RuleEngine` is driven by `SCNSceneRendererDelegate.renderer(_:updateAtTime:)` each frame and produces a `[String: Float]` uniform dictionary that `ShaderUniformBus` pushes to the material via `setValue(_:forKey:)`; the same `RuleOutput` simultaneously drives AVAudioEngine parameter updates, keeping visuals and audio synchronized without a separate message-passing step.
 
 ## License
 

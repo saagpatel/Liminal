@@ -22,8 +22,8 @@ Atmospheric first-person exploration game for iPhone + iPad (iOS 17+) built in S
 - Space definitions: JSON-driven — never hardcode space parameters in Swift
 
 ## Current Phase
-**Phase 0: Foundation + ShaderLab (Weeks 1–2)**
-See IMPLEMENTATION-ROADMAP.md for full phase details, tasks, and acceptance criteria.
+**Feature-complete — all 5 phases shipped; App Store submission ready**
+See IMPLEMENTATION-ROADMAP.md for full phase details and docs/PORTFOLIO-DISPOSITION.md for current release state.
 
 ## Key Decisions
 | Decision | Choice | Why |
@@ -55,8 +55,8 @@ Atmospheric first-person exploration game for iPhone + iPad (iOS 17+) built in S
 
 ## Current State
 
-**Phase 0: Foundation + ShaderLab (Weeks 1–2)**
-See IMPLEMENTATION-ROADMAP.md for full phase details, tasks, and acceptance criteria.
+**Feature-complete — all 5 phases shipped; App Store submission ready**
+See IMPLEMENTATION-ROADMAP.md for full phase details and docs/PORTFOLIO-DISPOSITION.md for current release state.
 
 ## Stack
 
@@ -70,7 +70,7 @@ See IMPLEMENTATION-ROADMAP.md for full phase details, tasks, and acceptance crit
 
 ## How To Run
 
-Build and run. Swipe to move, tilt to look. No other instructions — that's the game.
+Build and run. Drag to look, two-finger drag to move, pinch to adjust speed. No other instructions — that's the game.
 
 ## Known Risks
 
