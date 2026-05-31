@@ -30,3 +30,4 @@ Pods/
 # Swift Package Manager (not used, but just in case)
 .build/
 Package.resolved
+CLAUDE.md.bak
