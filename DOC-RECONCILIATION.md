@@ -23,19 +23,18 @@ and iPad, 7 spaces, no HUD, SceneKit + Metal, $4.99 premium. Code confirms:
 - `TitleScene.swift` is the only SpriteKit usage (title only — no in-game UI).
 - `APPSTORE-METADATA.md` confirms price, bundle ID, and App Store identity.
 
-No changes made to these descriptions.
+No changes made.
 
 ---
 
 ### 2. Current State
 
-**Status:** `drifted`
+**Status:** `consistent`
 **Evidence basis:** `verified-by-reading-code`
 
-Both `CLAUDE.md` sections (`## Current Phase` and the Portfolio Context `## Current State`)
-stated **"Phase 0: Foundation + ShaderLab (Weeks 1–2)"**.
-
-Code evidence that the project is well past Phase 0:
+`CLAUDE.md` Portfolio Context states **"Feature-complete — all 5 phases shipped; App Store
+submission ready"** (corrected in the prior reconciliation pass). README describes the
+project in present tense, listing implemented features. Code confirms:
 - All 7 Metal shaders present in `Liminal/Shaders/` (`Doppler.metal`, `Lensing.metal`,
   `Shadow.metal`, `Interference.metal`, `ChromaticDecay.metal`, `Resonance.metal`,
   `Convergence.metal`, `ConvergenceGeometry.metal`, `ResonanceGeometry.metal`,
@@ -45,18 +44,10 @@ Code evidence that the project is well past Phase 0:
   `TransitionManager.swift` all fully implemented.
 - `HapticManager.swift` present; 5-tap hidden settings panel wired in
   `SpaceViewController`.
-- 11 test files in `LiminalTests/` (one per rule + top-level tests), far beyond the 3
-  described in Phase 0's acceptance criteria.
-- Git log contains 7+ App Store prep commits (signing, icons, privacy policy,
-  DEVELOPMENT_TEAM, Privacy Manifest, ExportOptions, app icon).
-- `APPSTORE-METADATA.md` has a full submission checklist.
-- `docs/PORTFOLIO-DISPOSITION.md` explicitly states: "feature-complete; all phases done"
-  and classifies the repo as "Release Frozen (iOS App Store, paid)".
+- 11 test files in `LiminalTests/`.
+- `docs/PORTFOLIO-DISPOSITION.md` confirms "feature-complete; all phases done."
 
-**Changes made to `CLAUDE.md`:**
-- `## Current Phase` (main body): "Phase 0: Foundation + ShaderLab (Weeks 1–2)" →
-  "Feature-complete — all 5 phases shipped; App Store submission ready"
-- `## Current State` (Portfolio Context): same substitution
+No changes made.
 
 ---
 
@@ -65,119 +56,123 @@ Code evidence that the project is well past Phase 0:
 **Status:** `consistent`
 **Evidence basis:** `verified-by-reading-code`
 
-README Tech Stack table and CLAUDE.md both list Swift 6.0, SceneKit, Metal, AVAudioEngine,
+README Tech Stack table and CLAUDE.md list Swift 6.0, SceneKit, Metal, AVAudioEngine,
 SpriteKit, CoreHaptics, Xcode 16.x. All confirmed:
 - `LiminalApp.swift` and `AppDelegate.swift` confirm UIKit/SwiftUI lifecycle + AVAudioSession.
-- `.metal` files confirm Metal GPU usage.
-- `AudioManager.swift` confirms AVAudioEngine.
+- `.metal` files confirm Metal GPU usage via `SCNShaderModifierEntryPointFragment`.
+- `AudioManager.swift` confirms AVAudioEngine with `AVAudioEnvironmentNode` spatial audio.
 - `TitleScene.swift` confirms SpriteKit for title only.
 - `HapticManager.swift` confirms CoreHaptics.
-- No `Package.swift` or third-party imports found anywhere.
+- No `Package.swift` or third-party imports found anywhere in the codebase.
 
 No changes made.
 
 ---
 
-### 4. How to Run (Controls)
-
-**Status:** `drifted`
-**Evidence basis:** `verified-by-reading-code`
-
-Both `README.md` (Quick Start → Usage) and `CLAUDE.md` (Portfolio Context → How To Run)
-stated: "Swipe to move, tilt to look."
-
-This is wrong on two counts. `PlayerController.swift` wires three gestures:
-- `handleLookPan` (`UIPanGestureRecognizer`, 1 touch) → rotates camera (drag, not tilt)
-- `handleMovePan` (`UIPanGestureRecognizer`, 2 touches) → translates camera
-- `handlePinch` (`UIPinchGestureRecognizer`) → speed multiplier 0.5×–3.0×
-
-There is no gyroscope/accelerometer tilt input anywhere in the codebase. The verifiably
-correct description (also matching `APPSTORE-METADATA.md`) is drag-to-look, two-finger
-drag-to-move, pinch-to-speed.
-
-**Changes made:**
-- `README.md` line 31: "Swipe to move, tilt to look." →
-  "Drag to look, two-finger drag to move, pinch to adjust speed."
-- `CLAUDE.md` (Portfolio Context → How To Run): same substitution
-
----
-
-### 5. Architecture Description
-
-**Status:** `drifted`
-**Evidence basis:** `verified-by-reading-code`
-
-`README.md` Architecture paragraph contained three inaccurate claims:
-
-**a) "SpaceLoader compiles the associated Metal shader into a `SCNProgram`"**
-`SpaceLoader.swift` is a pure JSON decoder — it never touches shaders. The shader is
-attached in `SpaceScene.createShaderMaterial()` via `material.shaderModifiers =
-[.fragment: source]` (SCNShaderModifierEntryPoint), not `SCNProgram`. CLAUDE.md's "Key
-Decisions" table and "Do NOT" list both explicitly prohibit `SCNProgram`; this was a
-stale/aspirational description that never matched the implementation.
-
-**b) "RuleEngine runs on CADisplayLink"**
-`RuleEngine.evaluate` is called from `SpaceViewController.renderer(_:updateAtTime:)`, the
-`SCNSceneRendererDelegate` callback — not a standalone `CADisplayLink`. (`CADisplayLink`
-is used explicitly only in `ShaderLabViewController` in the separate `LiminalShaderLab`
-target.)
-
-**c) "writes a `simd_float4x4` uniform buffer"**
-`RuleOutput.shaderUniforms` is `[String: Float]`. `ShaderUniformBus.update(_:uniforms:)`
-pushes each entry via `material.setValue(value, forKey: key)`. No `simd_float4x4`
-anywhere in the uniform path.
-
-**Change made to `README.md` Architecture paragraph:**
-Old: "At runtime, the `SpaceLoader` compiles the associated Metal shader into a `SCNProgram`
-and attaches it to the scene graph. The `RuleEngine` runs on `CADisplayLink` and writes a
-`simd_float4x4` uniform buffer that both the Metal shader and the AVAudioEngine parameter
-automation consume on the same tick…"
-
-New: "At runtime, `SpaceScene` loads the Metal shader by name and attaches it as an
-`SCNShaderModifierEntryPointFragment` on the space material, keeping SceneKit's lighting
-pass intact. The `RuleEngine` is driven by `SCNSceneRendererDelegate.renderer(_:updateAtTime:)`
-each frame and produces a `[String: Float]` uniform dictionary that `ShaderUniformBus`
-pushes to the material via `setValue(_:forKey:)`; the same `RuleOutput` simultaneously
-drives AVAudioEngine parameter updates…"
-
----
-
-### 6. Known Risks / Constraints
+### 4. How to Run
 
 **Status:** `consistent`
 **Evidence basis:** `verified-by-reading-code`
 
-CLAUDE.md's "Key Decisions" table and "Do NOT" list describe constraints that the code
-respects: shader modifiers (not `SCNProgram`), JSON-driven parameters (no hardcoded floats
-in Swift), no third-party Swift packages, no in-game UI. All confirmed by reading the
-production source.
+README: "Build and run. Drag to look, two-finger drag to move, pinch to adjust speed."
+CLAUDE.md: "Build and run via Xcode 16.x on a physical device (iPhone 13 / A15 or newer).
+Drag to look, two-finger drag to move, pinch to adjust speed."
+
+Both are confirmed by `SpaceViewController.setupGestures()`:
+- `UIPanGestureRecognizer` (1 touch) → `handleLookPan` (drag to look)
+- `UIPanGestureRecognizer` (2 touches) → `handleMovePan` (two-finger drag to move)
+- `UIPinchGestureRecognizer` → `handlePinch` (pinch to adjust speed, 0.5×–3.0×)
+
+No tilt/gyroscope input exists anywhere in the codebase. Descriptions are accurate.
 
 No changes made.
+
+---
+
+### 5. Known Risks / Constraints
+
+**Status:** `consistent`
+**Evidence basis:** `verified-by-reading-code`
+
+CLAUDE.md Gotchas describe:
+- Prototype Metal shaders in `LiminalShaderLab` before main target — confirmed by presence
+  of the `LiminalShaderLab` target with its own `ShaderLabViewController.swift`.
+- Use `SCNShaderModifierEntryPointFragment` only, no `SCNProgram` — confirmed by
+  `SpaceScene.createShaderMaterial()` which uses `material.shaderModifiers`.
+- No in-game UI; scope limited to roadmap phases — confirmed by `SpaceViewController.swift`
+  containing no in-game labels, buttons, or meters.
+
+No changes made.
+
+---
+
+### 6. Next Move
+
+**Status:** `unverifiable`
+**Evidence basis:** `unverifiable-because-meta-instruction`
+
+CLAUDE.md Portfolio Context states: "Use this context plus the README and supporting docs
+to resume the next active task, then promote the repo beyond minimum-viable by capturing
+a dedicated handoff, roadmap, or discovery artifact."
+
+This is a forward-looking meta-instruction, not a factual claim derivable from the code.
+Left unchanged.
 
 ---
 
 ## Contradictions for Manual Review
 
 These are drifts in files **outside the editable set** (`README.md`, `CLAUDE.md`,
-`DOC-RECONCILIATION.md`, `docs/`). No edits were made; the one-line fix a human should
-apply is noted.
+`AGENTS.md`, `DOC-RECONCILIATION.md`, `docs/`). No edits were made; the one-line fix a
+human should apply is noted.
+
+### APPSTORE-METADATA.md — Hidden settings panel corner
+
+`APPSTORE-METADATA.md` App Review Notes says: "A 5-tap gesture on the **lower-left** corner
+of the screen opens a settings overlay."
+
+`SpaceViewController.swift:175–178` (`handleSettingsTap`) reads:
+```swift
+guard location.x < 44, location.y < 44 else { return }
+```
+In UIKit, `y = 0` is the top of the screen. `y < 44` activates in the **top-left** corner,
+not the lower-left. The panel renders at `y = 80` (well below the trigger zone) and
+`SpaceViewController.showSettings()` uses `CGRect(x: 20, y: 80, ...)`, consistent with
+top-of-screen placement.
+
+**Human fix:** `APPSTORE-METADATA.md` App Review Notes — change "lower-left" to "top-left".
+
+---
+
+### IMPLEMENTATION-ROADMAP.md — Space JSON filename
+
+`IMPLEMENTATION-ROADMAP.md` File Structure section (~line 68) lists:
+```
+space_05_chromatic.json
+```
+The actual file in the bundle is `space_05_chromatic_decay.json`
+(confirmed by `Liminal/Resources/Spaces/space_05_chromatic_decay.json`).
+
+**Human fix:** Update the filename in the File Structure listing to
+`space_05_chromatic_decay.json`.
+
+---
 
 ### IMPLEMENTATION-ROADMAP.md — Test file list
 
-`IMPLEMENTATION-ROADMAP.md` (File Structure section, lines ~88–92) lists only three test
-files under `LiminalTests/`:
-```
-SpaceLoaderTests.swift
-RuleEngineTests.swift
-AudioManagerTests.swift
-```
+The File Structure section lists only three test files under `LiminalTests/`:
+`SpaceLoaderTests.swift`, `RuleEngineTests.swift`, `AudioManagerTests.swift`.
+
 The actual `LiminalTests/` directory contains **11 test files**:
 `AudioManagerTests.swift`, `ChromaticDecayRuleTests.swift`, `ConvergenceRuleTests.swift`,
 `ExitConditionTests.swift`, `InterferenceRuleTests.swift`, `LensingRuleTests.swift`,
 `PlayerControllerTests.swift`, `ResonanceRuleTests.swift`, `RuleEngineTests.swift`,
 `ShadowRuleTests.swift`, `SpaceLoaderTests.swift`.
 
-**Human fix:** Update the File Structure section to list the 8 additional test files.
+**Human fix:** Add the 8 missing test files to the File Structure listing, or replace the
+three-file stub with a comment noting the full suite.
+
+---
 
 ### IMPLEMENTATION-ROADMAP.md — Phase checklists all unchecked
 
@@ -185,17 +180,19 @@ All five phase verification checklists use `- [ ]` (unchecked) even though
 `docs/PORTFOLIO-DISPOSITION.md` confirms the project is feature-complete with all phases
 shipped.
 
-**Human fix:** Check the completed items or add a "Phases Complete" banner at the top of
-the roadmap so it accurately reflects shipped status.
+**Human fix:** Mark completed items `- [x]` or add a "All phases complete" banner at the
+top of the roadmap.
+
+---
 
 ### Liminal/Core/ShaderUniformBus.swift — Stale stub comment
 
-Line 6 of `ShaderUniformBus.swift` reads: `/// Stub — real implementation in Phase 1.`
-The implementation IS complete (the `update` method is fully functional). This is a stale
-comment left over from early scaffolding.
+`ShaderUniformBus.swift:5` reads: `/// Stub — real implementation in Phase 1.`
+The implementation is complete (`update(_:uniforms:)` is fully functional — loops over
+uniforms and calls `setValue(_:forKey:)` per key). This comment is stale scaffolding.
 
-**Human fix:** Remove the `/// Stub — real implementation in Phase 1.` comment from
-`ShaderUniformBus.swift:6`.
+**Human fix (source file):** Remove the `/// Stub — real implementation in Phase 1.`
+comment from `ShaderUniformBus.swift:5`.
 
 ---
 
@@ -203,7 +200,8 @@ comment left over from early scaffolding.
 
 | Field | Value |
 |---|---|
-| Generated | 2026-05-30 22:41:32 PDT |
-| Branch | docs/truth-up-2026-05-30 |
-| HEAD sha reconciled against | 9d075518b017ab2418620506f44d63209aaa59ba |
-| Doc files changed | `README.md`, `CLAUDE.md`, `DOC-RECONCILIATION.md` (new) |
+| Generated | 2026-06-02 19:49:20 PDT |
+| Branch | docs/truth-up-2026-06-02 |
+| HEAD sha reconciled against | 22d9e6f6e1970bc6c959d3f659478389e499ba55 |
+| Doc files changed | `DOC-RECONCILIATION.md` (updated) |
+| Prior reconciliation | 2026-05-30, HEAD `9d075518` — prior drifts already resolved |
