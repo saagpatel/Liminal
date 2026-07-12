@@ -22,6 +22,7 @@ jobs:
         run: |
           plutil -lint Liminal/Support/PrivacyInfo.xcprivacy
           plutil -lint ExportOptions.plist
+          make verify-playtest-packet
       - name: Run tests
         run: |
           SIMULATOR_ID="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/ { print $2; exit }')"
