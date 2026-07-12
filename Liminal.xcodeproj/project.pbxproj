@@ -12,6 +12,7 @@
 		1D69D50BAF6204F31ADBF473 /* ShadowRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DFB9EFCDCCF1F273F88ADE /* ShadowRule.swift */; };
 		23C0CC7265B1B0C7C54E7BB0 /* LiminalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71B1DC3E74D9EEE20BD52E6 /* LiminalApp.swift */; };
 		293E2FF7850EF031E78E7627 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 85BB1D03DE031FD871E21F33 /* PrivacyInfo.xcprivacy */; };
+		2B7F91D142B34E34A7F2A012 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2B7F91D042B34E34A7F2A012 /* LICENSE.txt */; };
 		2A46FCB1957DB8EF167B58DA /* PlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1797ABFFD316E8F3859C01 /* PlayerController.swift */; };
 		2F95B254BDFAE686D8DBA4BB /* ShaderLabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A83F8CF8D73A959C559BEF0 /* ShaderLabViewController.swift */; };
 		34098F7B0F2CBD39F0A84CF7 /* InterferenceRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F61AC3CA2D4632B193A89 /* InterferenceRuleTests.swift */; };
@@ -72,6 +73,7 @@
 		1F6C54F94390728F118471EE /* SCNNode+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNNode+Helpers.swift"; sourceTree = "<group>"; };
 		2318499BA4CEB710994E3919 /* TestShaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = TestShaders; path = LiminalShaderLab/TestShaders; sourceTree = SOURCE_ROOT; };
 		262138FA16863909F88E6667 /* LiminalShaderLab.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = LiminalShaderLab.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		2B7F91D042B34E34A7F2A012 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		2AB8807B5D127D195E21A8FD /* ResonanceRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResonanceRule.swift; sourceTree = "<group>"; };
 		3521EDC57874937E03E7C236 /* SpaceDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceDefinition.swift; sourceTree = "<group>"; };
 		3A0D9F2DA401AF49435A679A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -195,6 +197,7 @@
 			isa = PBXGroup;
 			children = (
 				3A0D9F2DA401AF49435A679A /* Assets.xcassets */,
+				2B7F91D042B34E34A7F2A012 /* LICENSE.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -377,6 +380,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B03A667F1FBC9841C90BE22 /* Assets.xcassets in Resources */,
+				2B7F91D142B34E34A7F2A012 /* LICENSE.txt in Resources */,
 				293E2FF7850EF031E78E7627 /* PrivacyInfo.xcprivacy in Resources */,
 				3CCCA9AD8ECB81B6A88CEC3D /* Shaders in Resources */,
 				BCEB886D141B76A33A626974 /* Spaces in Resources */,
