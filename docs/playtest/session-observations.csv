@@ -1,0 +1,9 @@
+participant_id,build_commit,executable_sha256,device_model,os_version,session_date_pdt,started_moving_without_coaching,relationship_identified_within_5m,relationship_identification_seconds,deliberately_varied_speed,space_1_completed,completed_without_coaching,coaching_count,audio_audible,technical_failure,accessibility_blocker,motion_discomfort_or_stop,player_mechanic_description,most_memorable_moment,observer_notes
+P01,18841742b80f76604cabe7103c7d46db7d1e99ad,b685f18aeb2a342f79f2b592cad248b8950b097f61d4c76c54cbe351820a7e9e,,,,,,,,,,,,,,,,,
+P02,18841742b80f76604cabe7103c7d46db7d1e99ad,b685f18aeb2a342f79f2b592cad248b8950b097f61d4c76c54cbe351820a7e9e,,,,,,,,,,,,,,,,,
+P03,18841742b80f76604cabe7103c7d46db7d1e99ad,b685f18aeb2a342f79f2b592cad248b8950b097f61d4c76c54cbe351820a7e9e,,,,,,,,,,,,,,,,,
+P04,18841742b80f76604cabe7103c7d46db7d1e99ad,b685f18aeb2a342f79f2b592cad248b8950b097f61d4c76c54cbe351820a7e9e,,,,,,,,,,,,,,,,,
+P05,18841742b80f76604cabe7103c7d46db7d1e99ad,b685f18aeb2a342f79f2b592cad248b8950b097f61d4c76c54cbe351820a7e9e,,,,,,,,,,,,,,,,,
+P06,18841742b80f76604cabe7103c7d46db7d1e99ad,b685f18aeb2a342f79f2b592cad248b8950b097f61d4c76c54cbe351820a7e9e,,,,,,,,,,,,,,,,,
+P07,18841742b80f76604cabe7103c7d46db7d1e99ad,b685f18aeb2a342f79f2b592cad248b8950b097f61d4c76c54cbe351820a7e9e,,,,,,,,,,,,,,,,,
+P08,18841742b80f76604cabe7103c7d46db7d1e99ad,b685f18aeb2a342f79f2b592cad248b8950b097f61d4c76c54cbe351820a7e9e,,,,,,,,,,,,,,,,,

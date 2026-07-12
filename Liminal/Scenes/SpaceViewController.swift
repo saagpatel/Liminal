@@ -66,6 +66,16 @@ final class SpaceViewController: UIViewController {
         scnView.isPlaying = true
         scnView.antialiasingMode = .multisampling4X
         scnView.delegate = self
+        scnView.isAccessibilityElement = true
+        scnView.accessibilityLabel = "Liminal game world"
+        scnView.accessibilityHint = "Explore with drag gestures. Use the Actions rotor to open settings."
+        scnView.accessibilityCustomActions = [
+            UIAccessibilityCustomAction(
+                name: "Open Settings",
+                target: self,
+                selector: #selector(openSettingsAccessibilityAction)
+            )
+        ]
         view.addSubview(scnView)
     }
 
@@ -92,11 +102,15 @@ final class SpaceViewController: UIViewController {
         // Find the JSON file matching this space index prefix
         let prefix = String(format: "space_%02d", index)
         let allURLs = Bundle.main.urls(forResourcesWithExtension: "json",
-                                       subdirectory: "Resources/Spaces") ?? []
+                                       subdirectory: "Spaces") ?? []
         guard let url = allURLs.first(where: { $0.lastPathComponent.hasPrefix(prefix) }) else {
             #if DEBUG
             print("[SpaceViewController] No JSON found for space index \(index)")
             #endif
+            presentRuntimeError(
+                title: "Space Unavailable",
+                message: "Liminal could not load Space \(index). Relaunch the app to try again."
+            )
             return
         }
 
@@ -105,6 +119,10 @@ final class SpaceViewController: UIViewController {
             let definition = try SpaceLoader.load(name)
             spaceDefinition = definition
             let scene = try SpaceScene(definition: definition)
+            let savedSensitivity = UserDefaults.standard.object(forKey: "liminal.sensitivity") == nil
+                ? 1
+                : UserDefaults.standard.float(forKey: "liminal.sensitivity")
+            scene.playerController.setControlSensitivity(savedSensitivity)
             spaceScene = scene
             scnView.scene = scene.scene
             scnView.pointOfView = scene.playerController.cameraNode
@@ -115,6 +133,10 @@ final class SpaceViewController: UIViewController {
             #if DEBUG
             print("[SpaceViewController] Failed to load space \(index): \(error)")
             #endif
+            presentRuntimeError(
+                title: "Space Unavailable",
+                message: "Liminal could not load Space \(index). Relaunch the app to try again."
+            )
         }
     }
 
@@ -127,7 +149,18 @@ final class SpaceViewController: UIViewController {
             #if DEBUG
             print("[SpaceViewController] Audio setup failed: \(error)")
             #endif
+            presentRuntimeError(
+                title: "Audio Unavailable",
+                message: "Liminal could not start its soundscape. Check your audio output and relaunch the app."
+            )
         }
+    }
+
+    private func presentRuntimeError(title: String, message: String) {
+        guard presentedViewController == nil else { return }
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 
     // MARK: - Gesture Setup
@@ -184,6 +217,14 @@ final class SpaceViewController: UIViewController {
         }
     }
 
+    @objc private func openSettingsAccessibilityAction() -> Bool {
+        if settingsPanel == nil {
+            showSettings()
+        }
+        UIAccessibility.post(notification: .screenChanged, argument: settingsPanel)
+        return true
+    }
+
     private func showSettings() {
         let panel = UIView(frame: CGRect(x: 20, y: 80, width: 280, height: 200))
         panel.backgroundColor = UIColor.black.withAlphaComponent(0.85)
@@ -192,12 +233,15 @@ final class SpaceViewController: UIViewController {
         // Haptic toggle
         let hapticLabel = UILabel(frame: CGRect(x: 16, y: 16, width: 150, height: 30))
         hapticLabel.text = "Haptic Feedback"
+        hapticLabel.accessibilityIdentifier = "settings.haptics.label"
         hapticLabel.textColor = .white
         hapticLabel.font = .systemFont(ofSize: 14)
         panel.addSubview(hapticLabel)
 
         let hapticSwitch = UISwitch(frame: CGRect(x: 220, y: 16, width: 0, height: 0))
         hapticSwitch.isOn = HapticManager.shared.isEnabled
+        hapticSwitch.accessibilityLabel = "Haptic feedback"
+        hapticSwitch.accessibilityIdentifier = "settings.haptics"
         hapticSwitch.addTarget(self, action: #selector(hapticToggled), for: .valueChanged)
         panel.addSubview(hapticSwitch)
 
@@ -211,7 +255,11 @@ final class SpaceViewController: UIViewController {
         let volumeSlider = UISlider(frame: CGRect(x: 100, y: 60, width: 164, height: 30))
         volumeSlider.minimumValue = 0
         volumeSlider.maximumValue = 1
-        volumeSlider.value = UserDefaults.standard.float(forKey: "liminal.volume").nonZeroOr(1.0)
+        volumeSlider.value = UserDefaults.standard.object(forKey: "liminal.volume") == nil
+            ? 1
+            : UserDefaults.standard.float(forKey: "liminal.volume")
+        volumeSlider.accessibilityLabel = "Volume"
+        volumeSlider.accessibilityIdentifier = "settings.volume"
         volumeSlider.addTarget(self, action: #selector(volumeChanged), for: .valueChanged)
         panel.addSubview(volumeSlider)
 
@@ -225,13 +273,18 @@ final class SpaceViewController: UIViewController {
         let sensitivitySlider = UISlider(frame: CGRect(x: 100, y: 104, width: 164, height: 30))
         sensitivitySlider.minimumValue = 0.2
         sensitivitySlider.maximumValue = 2.0
-        sensitivitySlider.value = UserDefaults.standard.float(forKey: "liminal.sensitivity").nonZeroOr(1.0)
+        sensitivitySlider.value = UserDefaults.standard.object(forKey: "liminal.sensitivity") == nil
+            ? 1
+            : UserDefaults.standard.float(forKey: "liminal.sensitivity")
+        sensitivitySlider.accessibilityLabel = "Control sensitivity"
+        sensitivitySlider.accessibilityIdentifier = "settings.sensitivity"
         sensitivitySlider.addTarget(self, action: #selector(sensitivityChanged), for: .valueChanged)
         panel.addSubview(sensitivitySlider)
 
         // Dismiss button
         let dismissButton = UIButton(frame: CGRect(x: 16, y: 150, width: 248, height: 36))
         dismissButton.setTitle("Done", for: .normal)
+        dismissButton.accessibilityIdentifier = "settings.done"
         dismissButton.setTitleColor(.white.withAlphaComponent(0.7), for: .normal)
         dismissButton.addTarget(self, action: #selector(dismissSettings), for: .touchUpInside)
         panel.addSubview(dismissButton)
@@ -251,18 +304,21 @@ final class SpaceViewController: UIViewController {
 
     @objc private func volumeChanged(_ sender: UISlider) {
         UserDefaults.standard.set(sender.value, forKey: "liminal.volume")
+        AudioManager.shared.setMasterVolume(sender.value)
     }
 
     @objc private func sensitivityChanged(_ sender: UISlider) {
         UserDefaults.standard.set(sender.value, forKey: "liminal.sensitivity")
+        spaceScene?.playerController.setControlSensitivity(sender.value)
     }
 
     // MARK: - Exit + Transitions
 
     private func handleExitTriggered() {
         guard currentSpaceIndex < totalSpaces else {
-            // Last space — fade to black and stay
-            transitionManager.handleExit(in: scnView) {}
+            AudioManager.shared.stopEngine()
+            HapticManager.shared.stop()
+            transitionManager.fadeOutPermanently(in: scnView)
             return
         }
 
@@ -292,14 +348,6 @@ final class SpaceViewController: UIViewController {
         debugOverlay = overlay
     }
     #endif
-}
-
-// MARK: - Float helper
-
-private extension Float {
-    func nonZeroOr(_ fallback: Float) -> Float {
-        self == 0 ? fallback : self
-    }
 }
 
 // MARK: - SCNSceneRendererDelegate

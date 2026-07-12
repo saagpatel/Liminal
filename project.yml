@@ -22,14 +22,14 @@ targets:
           - "**/*.metal"
           - "**/*.json"
           - "**/*.caf"
-    resources:
       - path: Liminal/Shaders
         buildPhase: resources
         type: folder
-      - path: Liminal/Resources
+      - path: Liminal/Resources/Spaces
         buildPhase: resources
         type: folder
       - path: Liminal/Support/PrivacyInfo.xcprivacy
+        buildPhase: resources
     settings:
       base:
         PRODUCT_BUNDLE_IDENTIFIER: com.liminal.app
@@ -42,6 +42,8 @@ targets:
         GENERATE_INFOPLIST_FILE: true
         INFOPLIST_KEY_UIApplicationSceneManifest_Generation: true
         INFOPLIST_KEY_UILaunchScreen_Generation: true
+        INFOPLIST_KEY_ITSAppUsesNonExemptEncryption: false
+        CODE_SIGN_STYLE: Automatic
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad: "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
         INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone: "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight"
     scheme:
@@ -62,7 +64,6 @@ targets:
       - path: LiminalShaderLab
         excludes:
           - "**/*.metal"
-    resources:
       - path: LiminalShaderLab/TestShaders
         buildPhase: resources
         type: folder

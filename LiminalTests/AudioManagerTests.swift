@@ -5,12 +5,47 @@ import XCTest
 final class AudioManagerTests: XCTestCase {
 
     override func tearDown() async throws {
-        await AudioManager.shared.stopEngine()
+        AudioManager.shared.stopEngine()
     }
 
     func testEngineInitializesWithoutThrowing() throws {
         let config = makeAudioConfig()
         try AudioManager.shared.configure(audioConfig: config)
+    }
+
+    func testMissingBundledStemUsesAudibleProceduralFallback() throws {
+        try AudioManager.shared.configure(audioConfig: makeAudioConfig())
+        XCTAssertTrue(AudioManager.shared.usesProceduralAudio)
+    }
+
+    func testPersistedZeroVolumeIsRespected() throws {
+        let defaults = UserDefaults.standard
+        let previous = defaults.object(forKey: "liminal.volume")
+        defer {
+            if let previous { defaults.set(previous, forKey: "liminal.volume") }
+            else { defaults.removeObject(forKey: "liminal.volume") }
+        }
+        defaults.set(Float.zero, forKey: "liminal.volume")
+        try AudioManager.shared.configure(audioConfig: makeAudioConfig())
+        XCTAssertEqual(AudioManager.shared.masterVolume, 0, accuracy: 0.001)
+    }
+
+    func testMasterVolumeUpdatesLiveMixer() throws {
+        try AudioManager.shared.configure(audioConfig: makeAudioConfig())
+        AudioManager.shared.setMasterVolume(0.25)
+        XCTAssertEqual(AudioManager.shared.masterVolume, 0.25, accuracy: 0.001)
+    }
+
+    func testBackgroundSuspendAndForegroundResume() throws {
+        try AudioManager.shared.configure(audioConfig: makeAudioConfig())
+        AudioManager.shared.startPlayback()
+        XCTAssertTrue(AudioManager.shared.isEngineRunning)
+
+        AudioManager.shared.suspendForBackground()
+        XCTAssertFalse(AudioManager.shared.isEngineRunning)
+
+        AudioManager.shared.resumeAfterBackground()
+        XCTAssertTrue(AudioManager.shared.isEngineRunning)
     }
 
     func testStartEngineTwiceDoesNotCrash() throws {

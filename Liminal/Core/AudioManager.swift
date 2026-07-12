@@ -10,10 +10,14 @@ final class AudioManager {
 
     private var engine: AVAudioEngine?
     private var playerNodes: [AVAudioPlayerNode] = []
+    private var preEffectsMixer: AVAudioMixerNode?
     private var timePitch: AVAudioUnitTimePitch?
     private var reverb: AVAudioUnitReverb?
     private var environmentNode: AVAudioEnvironmentNode?
-    private var sourceNode: AVAudioSourceNode?
+
+    private(set) var usesProceduralAudio = false
+    var masterVolume: Float { engine?.mainMixerNode.outputVolume ?? 0 }
+    var isEngineRunning: Bool { engine?.isRunning ?? false }
 
     // Pitch ramping state
     private var targetPitchCents: Float = 0
@@ -28,6 +32,7 @@ final class AudioManager {
         stopEngine()
 
         let engine = AVAudioEngine()
+        let preEffectsMixer = AVAudioMixerNode()
         let timePitch = AVAudioUnitTimePitch()
         let reverb = AVAudioUnitReverb()
         let environmentNode = AVAudioEnvironmentNode()
@@ -38,17 +43,22 @@ final class AudioManager {
         environmentNode.listenerPosition = AVAudio3DPoint(x: 0, y: 1.7, z: 0)
         environmentNode.renderingAlgorithm = .HRTFHQ
 
+        engine.attach(preEffectsMixer)
         engine.attach(timePitch)
         engine.attach(reverb)
         engine.attach(environmentNode)
 
-        // Determine a mono format for connections where no audio file exists
+        // Determine a mono format for procedural release-safe audio.
         let sampleRate = engine.mainMixerNode.outputFormat(forBus: 0).sampleRate
-        let fallbackFormat = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)
+        guard let fallbackFormat = AVAudioFormat(
+            standardFormatWithSampleRate: sampleRate, channels: 1
+        ) else {
+            throw AudioManagerError.unsupportedOutputFormat
+        }
 
         if let sources = audioConfig.sources, !sources.isEmpty {
             // Multi-source mode (Space 4: two audio sources at 3D positions)
-            for sourceDef in sources {
+            for (index, sourceDef) in sources.enumerated() {
                 let playerNode = AVAudioPlayerNode()
                 engine.attach(playerNode)
 
@@ -59,9 +69,9 @@ final class AudioManager {
                 )
 
                 if let url = Bundle.main.url(forResource: sourceDef.stem, withExtension: "caf",
-                                             subdirectory: "Resources/Audio"),
+                                             subdirectory: "Audio"),
                    let audioFile = try? AVAudioFile(forReading: url) {
-                    engine.connect(playerNode, to: timePitch, format: audioFile.processingFormat)
+                    engine.connect(playerNode, to: preEffectsMixer, format: audioFile.processingFormat)
                     let frameCount = AVAudioFrameCount(audioFile.length)
                     if let buffer = AVAudioPCMBuffer(pcmFormat: audioFile.processingFormat,
                                                       frameCapacity: frameCount) {
@@ -69,7 +79,14 @@ final class AudioManager {
                         playerNode.scheduleBuffer(buffer, at: nil, options: .loops)
                     }
                 } else {
-                    engine.connect(playerNode, to: timePitch, format: fallbackFormat)
+                    engine.connect(playerNode, to: preEffectsMixer, format: fallbackFormat)
+                    let frequency = 72.0 + Double(index) * 11.0
+                    if let buffer = Self.makeProceduralDrone(
+                        format: fallbackFormat, frequency: frequency
+                    ) {
+                        playerNode.scheduleBuffer(buffer, at: nil, options: .loops)
+                        usesProceduralAudio = true
+                    }
                 }
 
                 playerNodes.append(playerNode)
@@ -77,12 +94,12 @@ final class AudioManager {
         } else {
             // Single-source mode
             let audioURL = Bundle.main.url(forResource: audioConfig.stem, withExtension: "caf",
-                                           subdirectory: "Resources/Audio")
+                                           subdirectory: "Audio")
 
             if let url = audioURL, let audioFile = try? AVAudioFile(forReading: url) {
                 let playerNode = AVAudioPlayerNode()
                 engine.attach(playerNode)
-                engine.connect(playerNode, to: timePitch, format: audioFile.processingFormat)
+                engine.connect(playerNode, to: preEffectsMixer, format: audioFile.processingFormat)
 
                 let frameCount = AVAudioFrameCount(audioFile.length)
                 if let buffer = AVAudioPCMBuffer(pcmFormat: audioFile.processingFormat,
@@ -92,42 +109,14 @@ final class AudioManager {
                 }
                 playerNodes.append(playerNode)
             } else {
-                #if DEBUG
-                // Procedural fallback: sine wave drone
-                let sampleRate = engine.mainMixerNode.outputFormat(forBus: 0).sampleRate
-                let format = AVAudioFormat(standardFormatWithSampleRate: sampleRate, channels: 1)!
-
-                var phase: Double = 0
-                let baseFreq: Double = 80.0
-
-                let sourceNode = AVAudioSourceNode(format: format) { _, _, frameCount, audioBufferList -> OSStatus in
-                    let ablPointer = UnsafeMutableAudioBufferListPointer(audioBufferList)
-                    let phaseIncrement = baseFreq / sampleRate
-                    for frame in 0..<Int(frameCount) {
-                        let sample = Float(
-                            sin(phase * 2 * .pi) * 0.2 +
-                            sin(phase * 4 * .pi) * 0.08 +
-                            sin(phase * 6 * .pi) * 0.04
-                        )
-                        for buf in ablPointer {
-                            let channelData = buf.mData?.assumingMemoryBound(to: Float.self)
-                            channelData?[frame] = sample
-                        }
-                        phase += phaseIncrement
-                        if phase >= 1.0 { phase -= 1.0 }
-                    }
-                    return noErr
-                }
-
-                engine.attach(sourceNode)
-                engine.connect(sourceNode, to: timePitch, format: format)
-                self.sourceNode = sourceNode
-                #else
                 let playerNode = AVAudioPlayerNode()
                 engine.attach(playerNode)
-                engine.connect(playerNode, to: timePitch, format: fallbackFormat)
+                engine.connect(playerNode, to: preEffectsMixer, format: fallbackFormat)
+                if let buffer = Self.makeProceduralDrone(format: fallbackFormat, frequency: 80) {
+                    playerNode.scheduleBuffer(buffer, at: nil, options: .loops)
+                    usesProceduralAudio = true
+                }
                 playerNodes.append(playerNode)
-                #endif
             }
         }
 
@@ -135,16 +124,23 @@ final class AudioManager {
         // AVAudioEnvironmentNode requires explicit format for connections
         let outputFormat = engine.mainMixerNode.outputFormat(forBus: 0)
         let monoFormat = AVAudioFormat(standardFormatWithSampleRate: outputFormat.sampleRate, channels: 1)
+        engine.connect(preEffectsMixer, to: timePitch, format: monoFormat)
         engine.connect(timePitch, to: reverb, format: monoFormat)
         engine.connect(reverb, to: environmentNode, format: monoFormat)
         engine.connect(environmentNode, to: engine.mainMixerNode, format: nil)
 
         self.engine = engine
+        self.preEffectsMixer = preEffectsMixer
         self.timePitch = timePitch
         self.reverb = reverb
         self.environmentNode = environmentNode
         self.targetPitchCents = 0
         self.currentPitchCents = 0
+
+        let savedVolume = UserDefaults.standard.object(forKey: "liminal.volume") == nil
+            ? 1
+            : UserDefaults.standard.float(forKey: "liminal.volume")
+        engine.mainMixerNode.outputVolume = min(max(savedVolume, 0), 1)
 
         try engine.start()
 
@@ -157,6 +153,28 @@ final class AudioManager {
     func startPlayback() {
         for node in playerNodes {
             node.play()
+        }
+    }
+
+    func setMasterVolume(_ volume: Float) {
+        engine?.mainMixerNode.outputVolume = min(max(volume, 0), 1)
+    }
+
+    func suspendForBackground() {
+        engine?.pause()
+    }
+
+    func resumeAfterBackground() {
+        guard let engine, !engine.isRunning else { return }
+        do {
+            try engine.start()
+            for node in playerNodes where !node.isPlaying {
+                node.play()
+            }
+        } catch {
+            #if DEBUG
+            print("[AudioManager] Resume failed: \(error)")
+            #endif
         }
     }
 
@@ -198,11 +216,39 @@ final class AudioManager {
         playerNodes.removeAll()
         engine?.stop()
         engine = nil
+        preEffectsMixer = nil
         timePitch = nil
         reverb = nil
         environmentNode = nil
-        sourceNode = nil
+        usesProceduralAudio = false
         NotificationCenter.default.removeObserver(self)
+    }
+
+    // MARK: - Procedural fallback
+
+    private static func makeProceduralDrone(
+        format: AVAudioFormat,
+        frequency: Double,
+        duration: Double = 4
+    ) -> AVAudioPCMBuffer? {
+        let frameCount = AVAudioFrameCount(format.sampleRate * duration)
+        guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: frameCount),
+              let channels = buffer.floatChannelData else { return nil }
+        buffer.frameLength = frameCount
+
+        for frame in 0..<Int(frameCount) {
+            let time = Double(frame) / format.sampleRate
+            let edge = min(1, min(time / 0.08, (duration - time) / 0.08))
+            let sample = Float((
+                sin(time * 2 * .pi * frequency) * 0.16 +
+                sin(time * 2 * .pi * frequency * 1.5) * 0.06 +
+                sin(time * 2 * .pi * frequency * 2) * 0.03
+            ) * edge)
+            for channel in 0..<Int(format.channelCount) {
+                channels[channel][frame] = sample
+            }
+        }
+        return buffer
     }
 
     // MARK: - Interruption handling
@@ -215,9 +261,12 @@ final class AudioManager {
         if type == .ended {
             let options = info[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0
             if AVAudioSession.InterruptionOptions(rawValue: options).contains(.shouldResume) {
-                try? engine?.start()
-                for node in playerNodes { node.play() }
+                resumeAfterBackground()
             }
         }
     }
+}
+
+enum AudioManagerError: Error {
+    case unsupportedOutputFormat
 }

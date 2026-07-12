@@ -68,11 +68,11 @@ Each space has a nudge: if you stand still for long enough, the environment give
 
 No in-game UI means no labels, no progress meters, and no indicators pointing toward the answer. This is by design — the moment you read a label, you stop observing. Liminal is a game about learning to read environments, not text.
 
-Settings (volume, haptic feedback, sensitivity) are accessible through a hidden 5-tap gesture. The game will not tell you this. You may discover it.
+Settings (volume, haptic feedback, sensitivity) are accessible through a five-tap gesture in the top-left corner and through the VoiceOver Actions rotor.
 
 **Audio**
 
-Each space has a unique ambient stem that modulates in real time based on your movement. Pitch, reverb mix, and 3D spatial positioning all respond to the same rules governing the visuals. Headphones are strongly recommended. Spatial audio is supported.
+Each space uses a redistribution-safe procedural soundscape that modulates in real time based on your movement. Pitch, reverb mix, and 3D spatial positioning respond to the same rules governing the visuals. Headphones are strongly recommended.
 
 **Performance**
 
@@ -113,7 +113,7 @@ Character count: 152
 | 1 | Space 1 — Doppler at high speed | Corridor view at high movement speed with full blueshift applied | Deep blue-shifted walls and ceiling clearly visible; no UI elements; strong color saturation shift showing the rule in action |
 | 2 | Space 2 — Lensing near mass point | Sphere room with significant UV distortion active near the mass point | Visible geometry warp/lens distortion on the sphere walls; subtle, otherworldly quality |
 | 3 | Space 5 — Chromatic Decay at partial desaturation | Corridor partially desaturated, showing the decay in progress | Left third of view desaturated to near-grayscale, right third still colored — shows the rule's effect without fully explaining it; no text or UI visible anywhere |
-| 4 | Title screen | "Liminal" title in SF Mono Light on solid black, mid-fade | Clean typographic composition; no background imagery; pure text on black shows the no-frills aesthetic |
+| 4 | Title screen | "Liminal" title in Menlo on solid black, mid-fade | Clean typographic composition; no background imagery; pure text on black shows the no-frills aesthetic |
 
 ### iPad 13" (iPad Pro M4 — 2064×2752 px) — 4 required
 
@@ -143,9 +143,9 @@ Move using two-finger drag, then pinch out to increase speed. As speed increases
 
 The rule for Space 1 is: speed above approximately 0.85 normalized velocity, maintained for 3 continuous seconds, triggers exit. The corridor geometry and audio pitch change are the signal. No other information is required.
 
-**Hidden settings panel:** A 5-tap gesture on the lower-left corner of the screen opens a settings overlay with haptic, volume, and sensitivity controls. This is intentionally undiscovered by most users — it is not a hidden feature you need to evaluate, but it is present if you wish to confirm it. Settings persist to `UserDefaults`.
+**Settings panel:** A five-tap gesture in the top-left corner opens an overlay with haptic, volume, and sensitivity controls. VoiceOver users can choose **Open Settings** from the Actions rotor. Settings persist to `UserDefaults`.
 
-**No network connections.** Liminal makes zero outbound network requests. No analytics, no crash reporter, no advertising SDK. Audio stems are bundled in the binary.
+**No network connections.** Liminal makes zero outbound network requests. No analytics, no crash reporter, no advertising SDK. Procedural audio is generated locally at runtime.
 
 **Space progression is linear.** There is no chapter select or way to skip spaces. A reviewer testing all 7 spaces will need to complete them in order. Estimated time to complete all 7 spaces for a first-time player who understands physics-based puzzle conventions: 30–60 minutes. For reference in review: the exit condition for each space is documented in the App Review notes attachment (available on request) — we are happy to provide it without spoiling the experience if it would expedite review.
 

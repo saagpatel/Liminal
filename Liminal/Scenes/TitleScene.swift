@@ -9,7 +9,7 @@ final class TitleScene: SKScene {
         backgroundColor = .black
 
         let label = SKLabelNode(text: "Liminal")
-        label.fontName = "SFMono-Light"
+        label.fontName = "Menlo-Regular"
         label.fontSize = 48
         label.fontColor = .white
         label.alpha = 0
