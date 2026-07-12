@@ -26,7 +26,8 @@
 | Release device build | Passed, unsigned as intended for this engineering gate |
 | Release bundle verifier | Passed: executable, bundle ID `com.liminal.app`, version `1.0.0`, privacy manifest, compiled assets, 7 spaces, and 10 shaders |
 | Release executable SHA-256 | `fc4b7252a2c262c0c90f8f74820e35a0afb4f10eac9de63408a019a41c359ef8` |
-| Release resource-path manifest SHA-256 | `419d0a479bcaa9eff2fd8ef7f1e43a5e324f34042a1d20c2051c9888c2543124` |
+| Release resource-path manifest SHA-256 | `4cbaf84c2d785689962557cf1b3163b01b831816a1401d8cf3b4e646f9b6ac34` |
+| Bundled MIT license SHA-256 | `6118a611296437620de9140424a829b3ef1eebca6726c948ba78a7c61d7d286e` |
 | Simulator install and launch | Passed for `com.liminal.app` on booted iPhone 17 |
 | Live first-space visual readback | Passed: forward corridor, repeating depth ribs, distinct exit frame, and debug rule values rendered at 60 FPS |
 | Runtime console | No missing-space or missing-font warning after corrections |

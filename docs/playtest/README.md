@@ -2,9 +2,10 @@
 
 ## Build under test
 
-- Source checkpoint: `313ce3bac336e9a669719b57eb892802b44c8c2b`
+- Source checkpoint: `bc792a12f21f0462c7c1a5d24db75df57a1d8d52`
 - Unsigned device Release executable SHA-256: `fc4b7252a2c262c0c90f8f74820e35a0afb4f10eac9de63408a019a41c359ef8`
-- Resource-path manifest SHA-256: `419d0a479bcaa9eff2fd8ef7f1e43a5e324f34042a1d20c2051c9888c2543124`
+- Resource-path manifest SHA-256: `4cbaf84c2d785689962557cf1b3163b01b831816a1401d8cf3b4e646f9b6ac34`
+- Bundled MIT license SHA-256: `6118a611296437620de9140424a829b3ef1eebca6726c948ba78a7c61d7d286e`
 - Decision posture: engineering candidate only; external sessions cannot begin until this source checkpoint is installed through a signed device build or TestFlight
 
 Do not substitute another build without recording its commit and hashes. A mixed-build cohort is invalid evidence.

@@ -1,6 +1,6 @@
 # Liminal — Cohort Decision
 
-- Build commit: `313ce3bac336e9a669719b57eb892802b44c8c2b`
+- Build commit: `bc792a12f21f0462c7c1a5d24db75df57a1d8d52`
 - Release executable SHA-256: `fc4b7252a2c262c0c90f8f74820e35a0afb4f10eac9de63408a019a41c359ef8`
 - Cohort dates: _pending_
 - Decision owner: _pending_
