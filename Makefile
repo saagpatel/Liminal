@@ -1,4 +1,4 @@
-.PHONY: generate build test release verify-release-shape archive export-app-store verify open clean
+.PHONY: generate build test release verify-release-shape verify-playtest-packet archive export-app-store verify open clean
 
 PROJECT := Liminal.xcodeproj
 SCHEME := Liminal
@@ -40,7 +40,10 @@ release: generate
 verify-release-shape: release
 	sh scripts/verify_release_bundle.sh "$(RELEASE_DIR)/Liminal.app"
 
-verify: test verify-release-shape
+verify-playtest-packet:
+	sh scripts/verify_playtest_packet.sh
+
+verify: test verify-release-shape verify-playtest-packet
 
 archive: generate
 	xcodebuild archive \
