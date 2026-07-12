@@ -107,6 +107,10 @@ final class SpaceViewController: UIViewController {
             #if DEBUG
             print("[SpaceViewController] No JSON found for space index \(index)")
             #endif
+            presentRuntimeError(
+                title: "Space Unavailable",
+                message: "Liminal could not load Space \(index). Relaunch the app to try again."
+            )
             return
         }
 
@@ -129,6 +133,10 @@ final class SpaceViewController: UIViewController {
             #if DEBUG
             print("[SpaceViewController] Failed to load space \(index): \(error)")
             #endif
+            presentRuntimeError(
+                title: "Space Unavailable",
+                message: "Liminal could not load Space \(index). Relaunch the app to try again."
+            )
         }
     }
 
@@ -141,7 +149,18 @@ final class SpaceViewController: UIViewController {
             #if DEBUG
             print("[SpaceViewController] Audio setup failed: \(error)")
             #endif
+            presentRuntimeError(
+                title: "Audio Unavailable",
+                message: "Liminal could not start its soundscape. Check your audio output and relaunch the app."
+            )
         }
+    }
+
+    private func presentRuntimeError(title: String, message: String) {
+        guard presentedViewController == nil else { return }
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+        present(alert, animated: true)
     }
 
     // MARK: - Gesture Setup
@@ -297,8 +316,9 @@ final class SpaceViewController: UIViewController {
 
     private func handleExitTriggered() {
         guard currentSpaceIndex < totalSpaces else {
-            // Last space — fade to black and stay
-            transitionManager.handleExit(in: scnView) {}
+            AudioManager.shared.stopEngine()
+            HapticManager.shared.stop()
+            transitionManager.fadeOutPermanently(in: scnView)
             return
         }
 

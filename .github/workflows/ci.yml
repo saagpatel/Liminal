@@ -3,15 +3,34 @@ on:
   push:
     branches: [main]
   pull_request:
+permissions:
+  contents: read
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
-  build:
+  verify:
     runs-on: macos-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v7
-      - name: Build
+      - name: Install XcodeGen
+        run: brew install xcodegen
+      - name: Generate project
+        run: xcodegen generate
+      - name: Validate release inputs
         run: |
-          xcodebuild build \
+          plutil -lint Liminal/Support/PrivacyInfo.xcprivacy
+          plutil -lint ExportOptions.plist
+      - name: Run tests
+        run: |
+          SIMULATOR_ID="$(xcrun simctl list devices available | awk -F '[()]' '/iPhone/ { print $2; exit }')"
+          test -n "$SIMULATOR_ID"
+          xcodebuild test \
             -scheme Liminal \
             -project Liminal.xcodeproj \
-            -destination 'generic/platform=iOS' \
+            -destination "platform=iOS Simulator,id=${SIMULATOR_ID}" \
             CODE_SIGNING_ALLOWED=NO
+      - name: Build and validate release bundle
+        run: |
+          make verify-release-shape

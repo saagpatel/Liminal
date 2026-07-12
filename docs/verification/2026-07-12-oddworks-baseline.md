@@ -22,10 +22,10 @@
 | Check | Result |
 |---|---|
 | XcodeGen regeneration | Passed with XcodeGen 2.45.4 |
-| iPhone 17 / iOS 26.5 simulator tests | 102 passed, 0 failed |
+| iPhone 17 / iOS 26.5 simulator tests | 103 passed, 0 failed after final-ending regression coverage |
 | Release device build | Passed, unsigned as intended for this engineering gate |
 | Release bundle verifier | Passed: executable, bundle ID `com.liminal.app`, version `1.0.0`, privacy manifest, compiled assets, 7 spaces, and 10 shaders |
-| Release executable SHA-256 | `fc4b7252a2c262c0c90f8f74820e35a0afb4f10eac9de63408a019a41c359ef8` |
+| Release executable SHA-256 | `b685f18aeb2a342f79f2b592cad248b8950b097f61d4c76c54cbe351820a7e9e` |
 | Release resource-path manifest SHA-256 | `4cbaf84c2d785689962557cf1b3163b01b831816a1401d8cf3b4e646f9b6ac34` |
 | Bundled MIT license SHA-256 | `6118a611296437620de9140424a829b3ef1eebca6726c948ba78a7c61d7d286e` |
 | Simulator install and launch | Passed for `com.liminal.app` on booted iPhone 17 |

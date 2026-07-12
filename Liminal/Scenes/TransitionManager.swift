@@ -23,4 +23,15 @@ final class TransitionManager {
             })
         })
     }
+
+    /// Final-space ending: fade to black and intentionally remain there.
+    func fadeOutPermanently(in view: SCNView, completion: @escaping () -> Void = {}) {
+        guard !isTransitioning else { return }
+        isTransitioning = true
+        UIView.animate(withDuration: 0.75, animations: {
+            view.alpha = 0
+        }, completion: { _ in
+            completion()
+        })
+    }
 }

@@ -39,7 +39,7 @@ Atmospheric first-person exploration game for iPhone + iPad (iOS 17+) built in S
 
 ## Current State
 
-**Feature-complete — all 5 phases shipped; App Store submission ready**
+**Feature-complete engineering candidate — external playtest, physical-device, signing, and App Store publication gates remain**
 See IMPLEMENTATION-ROADMAP.md for full phase details and docs/PORTFOLIO-DISPOSITION.md for current release state.
 
 ## Stack

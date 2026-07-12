@@ -1,26 +1,32 @@
-.PHONY: build test release verify-release-shape verify open clean
+.PHONY: generate build test release verify-release-shape archive export-app-store verify open clean
 
 PROJECT := Liminal.xcodeproj
 SCHEME := Liminal
 DESTINATION ?= platform=iOS Simulator,name=iPhone 17
 DERIVED_DATA ?= .build/DerivedData
 RELEASE_DIR ?= $(CURDIR)/builds/Release-iphoneos
+ARCHIVE_PATH ?= $(CURDIR)/builds/Liminal.xcarchive
+EXPORT_PATH ?= $(CURDIR)/builds/AppStore
+PROVISIONING_UPDATE_FLAG ?=
 
-build:
+generate:
+	xcodegen generate
+
+build: generate
 	xcodebuild build \
 		-project "$(PROJECT)" \
 		-scheme "$(SCHEME)" \
 		-destination '$(DESTINATION)' \
 		-derivedDataPath "$(DERIVED_DATA)"
 
-test:
+test: generate
 	xcodebuild test \
 		-project "$(PROJECT)" \
 		-scheme "$(SCHEME)" \
 		-destination '$(DESTINATION)' \
 		-derivedDataPath "$(DERIVED_DATA)"
 
-release:
+release: generate
 	mkdir -p builds
 	xcodebuild build \
 		-project "$(PROJECT)" \
@@ -35,6 +41,21 @@ verify-release-shape: release
 	sh scripts/verify_release_bundle.sh "$(RELEASE_DIR)/Liminal.app"
 
 verify: test verify-release-shape
+
+archive: generate
+	xcodebuild archive \
+		-project "$(PROJECT)" \
+		-scheme "$(SCHEME)" \
+		-configuration Release \
+		-destination 'generic/platform=iOS' \
+		-archivePath "$(ARCHIVE_PATH)"
+
+export-app-store: archive
+	xcodebuild -exportArchive \
+		-archivePath "$(ARCHIVE_PATH)" \
+		-exportPath "$(EXPORT_PATH)" \
+		-exportOptionsPlist ExportOptions.plist \
+		$(PROVISIONING_UPDATE_FLAG)
 
 open:
 	open "$(PROJECT)"

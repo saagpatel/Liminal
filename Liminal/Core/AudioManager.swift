@@ -261,8 +261,7 @@ final class AudioManager {
         if type == .ended {
             let options = info[AVAudioSessionInterruptionOptionKey] as? UInt ?? 0
             if AVAudioSession.InterruptionOptions(rawValue: options).contains(.shouldResume) {
-                try? engine?.start()
-                for node in playerNodes { node.play() }
+                resumeAfterBackground()
             }
         }
     }

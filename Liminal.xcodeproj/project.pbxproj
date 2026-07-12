@@ -12,7 +12,6 @@
 		1D69D50BAF6204F31ADBF473 /* ShadowRule.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9DFB9EFCDCCF1F273F88ADE /* ShadowRule.swift */; };
 		23C0CC7265B1B0C7C54E7BB0 /* LiminalApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D71B1DC3E74D9EEE20BD52E6 /* LiminalApp.swift */; };
 		293E2FF7850EF031E78E7627 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 85BB1D03DE031FD871E21F33 /* PrivacyInfo.xcprivacy */; };
-		2B7F91D142B34E34A7F2A012 /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2B7F91D042B34E34A7F2A012 /* LICENSE.txt */; };
 		2A46FCB1957DB8EF167B58DA /* PlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B1797ABFFD316E8F3859C01 /* PlayerController.swift */; };
 		2F95B254BDFAE686D8DBA4BB /* ShaderLabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5A83F8CF8D73A959C559BEF0 /* ShaderLabViewController.swift */; };
 		34098F7B0F2CBD39F0A84CF7 /* InterferenceRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EB0F61AC3CA2D4632B193A89 /* InterferenceRuleTests.swift */; };
@@ -36,12 +35,14 @@
 		94810B53825419E2F5D42443 /* HapticManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = E28F120B82A6BEF1D414C94F /* HapticManager.swift */; };
 		AC07C2E2E4CCC81B253BF927 /* AccessibilityTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 691CD659F3653F9577102E1A /* AccessibilityTests.swift */; };
 		AF3D98311180ADB08AE44EC8 /* ResonanceRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A5E34FE18963F0BA74D32B13 /* ResonanceRuleTests.swift */; };
+		BA3CE43C1E3F985C31FD26B7 /* TransitionManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C112B22D123C6095C0DCF8B6 /* TransitionManagerTests.swift */; };
 		BCEB886D141B76A33A626974 /* Spaces in Resources */ = {isa = PBXBuildFile; fileRef = 0CC1DC9C03F401F45A49D3B7 /* Spaces */; };
 		BDEC3D0A3E6EA5DF34D11187 /* SpaceDefinition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3521EDC57874937E03E7C236 /* SpaceDefinition.swift */; };
 		C1C7B25C6F688CCC24D022E2 /* SpaceScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5606F54EBA99A1F40E759E3 /* SpaceScene.swift */; };
 		C35FA5C87F723023E57C11CD /* ShadowRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0F2851E0E4153B3D75AA994 /* ShadowRuleTests.swift */; };
 		CDF29FF221F0A9278CD9928E /* ExitConditionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9330B88E2973365B660B5897 /* ExitConditionTests.swift */; };
 		CFCE43C43C5C8A6B1F8295C4 /* LensingRuleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D98DAF09108442A94B7CC2AE /* LensingRuleTests.swift */; };
+		D178DB15A5FEB5EBDEA87D8C /* LICENSE.txt in Resources */ = {isa = PBXBuildFile; fileRef = E86386401061E24BFED241FA /* LICENSE.txt */; };
 		D6A0297EC680B75F79918C88 /* ShaderLabApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934D3159FE32ADB347133901 /* ShaderLabApp.swift */; };
 		DADA0BFACA76FA1BE3586675 /* TestShaders in Resources */ = {isa = PBXBuildFile; fileRef = 2318499BA4CEB710994E3919 /* TestShaders */; };
 		E227972F2B5F22FCD5C8DA3F /* AudioManagerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 72C6CA5DC33E1CE79596D69C /* AudioManagerTests.swift */; };
@@ -73,7 +74,6 @@
 		1F6C54F94390728F118471EE /* SCNNode+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SCNNode+Helpers.swift"; sourceTree = "<group>"; };
 		2318499BA4CEB710994E3919 /* TestShaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = TestShaders; path = LiminalShaderLab/TestShaders; sourceTree = SOURCE_ROOT; };
 		262138FA16863909F88E6667 /* LiminalShaderLab.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = LiminalShaderLab.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		2B7F91D042B34E34A7F2A012 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		2AB8807B5D127D195E21A8FD /* ResonanceRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResonanceRule.swift; sourceTree = "<group>"; };
 		3521EDC57874937E03E7C236 /* SpaceDefinition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceDefinition.swift; sourceTree = "<group>"; };
 		3A0D9F2DA401AF49435A679A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -100,6 +100,7 @@
 		AD02D85F8559C6EE74869922 /* SpaceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceViewController.swift; sourceTree = "<group>"; };
 		BBA09E019D36087726FBA360 /* simd+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "simd+Helpers.swift"; sourceTree = "<group>"; };
 		C0CD6E1EFAC8D73C401E3E0F /* DopplerRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DopplerRule.swift; sourceTree = "<group>"; };
+		C112B22D123C6095C0DCF8B6 /* TransitionManagerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TransitionManagerTests.swift; sourceTree = "<group>"; };
 		C607A616353CEA8DBDDD9427 /* Shaders */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Shaders; path = Liminal/Shaders; sourceTree = SOURCE_ROOT; };
 		D71B1DC3E74D9EEE20BD52E6 /* LiminalApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiminalApp.swift; sourceTree = "<group>"; };
 		D85DF74D1324CB953A8BBA8E /* SpaceRule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceRule.swift; sourceTree = "<group>"; };
@@ -107,6 +108,7 @@
 		DCC87A55BCCA08F506D77C7B /* DebugOverlay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DebugOverlay.swift; sourceTree = "<group>"; };
 		E28F120B82A6BEF1D414C94F /* HapticManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HapticManager.swift; sourceTree = "<group>"; };
 		E5606F54EBA99A1F40E759E3 /* SpaceScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpaceScene.swift; sourceTree = "<group>"; };
+		E86386401061E24BFED241FA /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		E975D093BBD92422C5D038F4 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		EB0F61AC3CA2D4632B193A89 /* InterferenceRuleTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InterferenceRuleTests.swift; sourceTree = "<group>"; };
 		EE988AB839E2D235FCE6B1F3 /* LiminalTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = LiminalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -197,7 +199,7 @@
 			isa = PBXGroup;
 			children = (
 				3A0D9F2DA401AF49435A679A /* Assets.xcassets */,
-				2B7F91D042B34E34A7F2A012 /* LICENSE.txt */,
+				E86386401061E24BFED241FA /* LICENSE.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -270,6 +272,7 @@
 				7D7974304EAFB54AC31FB9BB /* RuleEngineTests.swift */,
 				A0F2851E0E4153B3D75AA994 /* ShadowRuleTests.swift */,
 				4AFF9D1AC51993E42E92291B /* SpaceLoaderTests.swift */,
+				C112B22D123C6095C0DCF8B6 /* TransitionManagerTests.swift */,
 			);
 			path = LiminalTests;
 			sourceTree = "<group>";
@@ -342,6 +345,7 @@
 				TargetAttributes = {
 					314A6FE0BA7CA5C7B546749C = {
 						DevelopmentTeam = 3TGZFKFNA4;
+						ProvisioningStyle = Automatic;
 					};
 				};
 			};
@@ -380,7 +384,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4B03A667F1FBC9841C90BE22 /* Assets.xcassets in Resources */,
-				2B7F91D142B34E34A7F2A012 /* LICENSE.txt in Resources */,
+				D178DB15A5FEB5EBDEA87D8C /* LICENSE.txt in Resources */,
 				293E2FF7850EF031E78E7627 /* PrivacyInfo.xcprivacy in Resources */,
 				3CCCA9AD8ECB81B6A88CEC3D /* Shaders in Resources */,
 				BCEB886D141B76A33A626974 /* Spaces in Resources */,
@@ -406,6 +410,7 @@
 				F88C5E01EEE5F5163F6E4D0D /* RuleEngineTests.swift in Sources */,
 				C35FA5C87F723023E57C11CD /* ShadowRuleTests.swift in Sources */,
 				69D71FA63B62EA55B41FAC36 /* SpaceLoaderTests.swift in Sources */,
+				BA3CE43C1E3F985C31FD26B7 /* TransitionManagerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,10 +471,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3TGZFKFNA4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
@@ -572,10 +579,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 3TGZFKFNA4;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_GENERATION_MODE = GeneratedFile;
+				INFOPLIST_KEY_ITSAppUsesNonExemptEncryption = NO;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
