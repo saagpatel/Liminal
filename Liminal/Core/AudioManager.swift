@@ -17,6 +17,7 @@ final class AudioManager {
 
     private(set) var usesProceduralAudio = false
     var masterVolume: Float { engine?.mainMixerNode.outputVolume ?? 0 }
+    var isEngineRunning: Bool { engine?.isRunning ?? false }
 
     // Pitch ramping state
     private var targetPitchCents: Float = 0
@@ -157,6 +158,24 @@ final class AudioManager {
 
     func setMasterVolume(_ volume: Float) {
         engine?.mainMixerNode.outputVolume = min(max(volume, 0), 1)
+    }
+
+    func suspendForBackground() {
+        engine?.pause()
+    }
+
+    func resumeAfterBackground() {
+        guard let engine, !engine.isRunning else { return }
+        do {
+            try engine.start()
+            for node in playerNodes where !node.isPlaying {
+                node.play()
+            }
+        } catch {
+            #if DEBUG
+            print("[AudioManager] Resume failed: \(error)")
+            #endif
+        }
     }
 
     // MARK: - Per-frame updates

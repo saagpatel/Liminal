@@ -36,6 +36,18 @@ final class AudioManagerTests: XCTestCase {
         XCTAssertEqual(AudioManager.shared.masterVolume, 0.25, accuracy: 0.001)
     }
 
+    func testBackgroundSuspendAndForegroundResume() throws {
+        try AudioManager.shared.configure(audioConfig: makeAudioConfig())
+        AudioManager.shared.startPlayback()
+        XCTAssertTrue(AudioManager.shared.isEngineRunning)
+
+        AudioManager.shared.suspendForBackground()
+        XCTAssertFalse(AudioManager.shared.isEngineRunning)
+
+        AudioManager.shared.resumeAfterBackground()
+        XCTAssertTrue(AudioManager.shared.isEngineRunning)
+    }
+
     func testStartEngineTwiceDoesNotCrash() throws {
         let config = makeAudioConfig()
         try AudioManager.shared.configure(audioConfig: config)

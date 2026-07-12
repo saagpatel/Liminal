@@ -14,6 +14,7 @@
 - The opening camera’s yaw faced the corridor’s back wall. It now faces down the authored corridor, whose geometry includes repeating ribs and a distinct exit frame for depth and motion-parallax feedback.
 - The unavailable `SFMono-Light` title font was replaced with `Menlo-Regular`.
 - VoiceOver can identify the game surface and invoke an `Open Settings` custom action; settings controls have explicit labels and identifiers.
+- Entering the background now suspends the audio engine, and foreground return restarts and reschedules the procedural soundscape through the app lifecycle delegate.
 - The Makefile used nonexistent SwiftPM commands. It now drives the real Xcode project for simulator build/test and device Release bundle verification.
 
 ## Checks
@@ -21,10 +22,10 @@
 | Check | Result |
 |---|---|
 | XcodeGen regeneration | Passed with XcodeGen 2.45.4 |
-| iPhone 17 / iOS 26.5 simulator tests | 101 passed, 0 failed |
+| iPhone 17 / iOS 26.5 simulator tests | 102 passed, 0 failed |
 | Release device build | Passed, unsigned as intended for this engineering gate |
 | Release bundle verifier | Passed: executable, bundle ID `com.liminal.app`, version `1.0.0`, privacy manifest, compiled assets, 7 spaces, and 10 shaders |
-| Release executable SHA-256 | `7dd94898c27b8a5edd637f3f944ccf0ce4fd083ffff9e328908d59cda37c3ead` |
+| Release executable SHA-256 | `fc4b7252a2c262c0c90f8f74820e35a0afb4f10eac9de63408a019a41c359ef8` |
 | Release resource-path manifest SHA-256 | `419d0a479bcaa9eff2fd8ef7f1e43a5e324f34042a1d20c2051c9888c2543124` |
 | Simulator install and launch | Passed for `com.liminal.app` on booted iPhone 17 |
 | Live first-space visual readback | Passed: forward corridor, repeating depth ribs, distinct exit frame, and debug rule values rendered at 60 FPS |
@@ -36,7 +37,7 @@ The only build note is Xcode’s expected App Intents metadata skip because the 
 
 - No physical-device Metal/API validation or Instruments performance capture has occurred.
 - Audio audibility and spatial behavior have not been judged on physical speakers/headphones.
-- Background/foreground, interruption, reduced-audio completion, final-space ending, and every-space visual behavior still require runtime exercises.
+- Audio-engine background suspension and foreground resumption pass automated coverage, but the complete app transition, interruption, reduced-audio completion, final-space ending, and every-space visual behavior still require runtime exercises.
 - No naive external cohort has run. Discoverability, puzzle fairness, motion comfort, completion, and retention remain unknown.
 - The device Release bundle is unsigned. A valid provisioning profile, signed archive/export, App Store Connect record, live marketing URL, screenshot set, pricing confirmation, TestFlight evidence, and explicit submission approval remain publication gates.
 - Existing screenshots and “submission ready” documentation predate this verified build and must not be used as release evidence without replacement.

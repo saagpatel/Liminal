@@ -21,4 +21,13 @@ final class AppDelegate: NSObject, UIApplicationDelegate {
             #endif
         }
     }
+
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        AudioManager.shared.suspendForBackground()
+    }
+
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        configureAudioSession()
+        AudioManager.shared.resumeAfterBackground()
+    }
 }
