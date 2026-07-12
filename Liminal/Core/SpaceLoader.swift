@@ -18,7 +18,7 @@ enum SpaceLoader {
 
     /// Load a single space definition by filename (without extension).
     static func load(_ name: String, from bundle: Bundle = .main,
-                     subdirectory: String? = "Resources/Spaces") throws -> SpaceDefinition {
+                     subdirectory: String? = "Spaces") throws -> SpaceDefinition {
         guard let url = bundle.url(forResource: name, withExtension: "json",
                                    subdirectory: subdirectory) else {
             throw LoadError.fileNotFound(name)
@@ -46,7 +46,7 @@ enum SpaceLoader {
 
         for name in names {
             // Find any JSON file starting with this prefix
-            if let url = bundle.urls(forResourcesWithExtension: "json", subdirectory: "Resources/Spaces")?
+            if let url = bundle.urls(forResourcesWithExtension: "json", subdirectory: "Spaces")?
                 .first(where: { $0.lastPathComponent.hasPrefix(name) })
             {
                 let data = try Data(contentsOf: url)

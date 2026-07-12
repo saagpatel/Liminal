@@ -55,6 +55,7 @@ final class PlayerController: @unchecked Sendable {
         var yaw: Float = 0
         var pitch: Float = 0
         var speedMultiplier: Float = 1.0
+        var controlSensitivity: Float = 1.0
 
         // Accumulated gesture deltas (zeroed each frame)
         var lookDeltaX: Float = 0
@@ -118,6 +119,12 @@ final class PlayerController: @unchecked Sendable {
         }
     }
 
+    func setControlSensitivity(_ value: Float) {
+        state.withLock { state in
+            state.controlSensitivity = Swift.min(Swift.max(value, 0.2), 2.0)
+        }
+    }
+
     func handleMovePan(translation: CGPoint, isActive: Bool) {
         state.withLock { s in
             s.moveDeltaX += Float(translation.x)
@@ -146,8 +153,8 @@ final class PlayerController: @unchecked Sendable {
         }
 
         // 2. Apply look rotation
-        var yaw = snapshot.yaw + snapshot.lookDeltaX * lookSensitivity
-        var pitch = snapshot.pitch - snapshot.lookDeltaY * lookSensitivity
+        var yaw = snapshot.yaw + snapshot.lookDeltaX * lookSensitivity * snapshot.controlSensitivity
+        var pitch = snapshot.pitch - snapshot.lookDeltaY * lookSensitivity * snapshot.controlSensitivity
         pitch = Swift.min(Swift.max(pitch, -maxPitch), maxPitch)
 
         // Normalize yaw to -π..π
@@ -163,8 +170,8 @@ final class PlayerController: @unchecked Sendable {
         // 4. Apply translation
         var newPos = snapshot.currentPosition
         if snapshot.isMoving {
-            let moveForward = -snapshot.moveDeltaY * moveSensitivity
-            let moveRight = snapshot.moveDeltaX * moveSensitivity
+            let moveForward = -snapshot.moveDeltaY * moveSensitivity * snapshot.controlSensitivity
+            let moveRight = snapshot.moveDeltaX * moveSensitivity * snapshot.controlSensitivity
             let displacement = (forward * moveForward + right * moveRight)
                 * baseMovementSpeed * snapshot.speedMultiplier * deltaTime
             newPos += displacement

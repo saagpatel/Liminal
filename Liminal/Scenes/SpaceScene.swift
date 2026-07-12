@@ -56,7 +56,7 @@ final class SpaceScene {
         case .corridor:
             return (
                 SIMD3<Float>(-scale.x / 2 + 2, 1.7, 0),
-                Float.pi / 2,  // face +X down the corridor
+                -Float.pi / 2,  // SceneKit camera faces -Z; negative yaw turns toward +X
                 .rectangular(
                     min: SIMD3(-scale.x / 2 + margin, 1.7, -scale.z / 2 + margin),
                     max: SIMD3(scale.x / 2 - margin, 1.7, scale.z / 2 - margin)),
@@ -230,7 +230,65 @@ final class SpaceScene {
         backWallNode.name = "backWall"
         container.addChildNode(backWallNode)
 
+        // Repeating architectural ribs create depth and motion parallax without a HUD.
+        // Their spacing is derived from the authored corridor dimensions.
+        let ribMaterial = SCNMaterial()
+        ribMaterial.diffuse.contents = UIColor(red: 0.04, green: 0.10, blue: 0.14, alpha: 1)
+        ribMaterial.emission.contents = UIColor(red: 0.06, green: 0.22, blue: 0.30, alpha: 1)
+        let ribSpacing = Swift.max(Float(length) / 10, 2.5)
+        var ribX = -Float(length) / 2 + ribSpacing
+        while ribX < Float(length) / 2 {
+            addCorridorRib(
+                to: container,
+                x: ribX,
+                height: Float(height),
+                width: Float(width),
+                material: ribMaterial
+            )
+            ribX += ribSpacing
+        }
+
+        let exitMaterial = SCNMaterial()
+        exitMaterial.diffuse.contents = UIColor(red: 0.08, green: 0.22, blue: 0.28, alpha: 1)
+        exitMaterial.emission.contents = UIColor(red: 0.15, green: 0.65, blue: 0.82, alpha: 1)
+        addCorridorRib(
+            to: container,
+            x: Float(length) / 2 - 0.25,
+            height: Float(height),
+            width: Float(width),
+            material: exitMaterial,
+            thickness: 0.16
+        )
+
         return container
+    }
+
+    private static func addCorridorRib(
+        to container: SCNNode,
+        x: Float,
+        height: Float,
+        width: Float,
+        material: SCNMaterial,
+        thickness: CGFloat = 0.06
+    ) {
+        for z in [-width / 2 + Float(thickness), width / 2 - Float(thickness)] {
+            let vertical = SCNBox(
+                width: thickness, height: CGFloat(height), length: thickness, chamferRadius: 0
+            )
+            vertical.materials = [material]
+            let node = SCNNode(geometry: vertical)
+            node.simdPosition = SIMD3<Float>(x, height / 2, z)
+            container.addChildNode(node)
+        }
+        for y in [Float(thickness), height - Float(thickness)] {
+            let crossbar = SCNBox(
+                width: thickness, height: thickness, length: CGFloat(width), chamferRadius: 0
+            )
+            crossbar.materials = [material]
+            let node = SCNNode(geometry: crossbar)
+            node.simdPosition = SIMD3<Float>(x, y, 0)
+            container.addChildNode(node)
+        }
     }
 
     // MARK: - Sphere Room Geometry

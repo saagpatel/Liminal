@@ -72,6 +72,20 @@ final class PlayerControllerTests: XCTestCase {
         XCTAssertNotEqual(newAngles.x, initialAngles.x, accuracy: 0.001)
     }
 
+    func testControlSensitivityChangesLookResponse() {
+        let normal = makeController()
+        let reduced = makeController()
+        reduced.setControlSensitivity(0.2)
+        normal.handleLookPan(translation: CGPoint(x: 100, y: 0))
+        reduced.handleLookPan(translation: CGPoint(x: 100, y: 0))
+        _ = normal.consumeInputAndUpdate(deltaTime: 0.016)
+        _ = reduced.consumeInputAndUpdate(deltaTime: 0.016)
+        XCTAssertGreaterThan(
+            abs(normal.cameraNode.simdEulerAngles.y),
+            abs(reduced.cameraNode.simdEulerAngles.y) * 4
+        )
+    }
+
     func testPitchClampedAt70Degrees() {
         let controller = makeController()
         _ = controller.consumeInputAndUpdate(deltaTime: 0.016)
