@@ -1,0 +1,9 @@
+participant_id,build_commit,executable_sha256,device_model,os_version,session_date_pdt,started_moving_without_coaching,relationship_identified_within_5m,relationship_identification_seconds,deliberately_varied_speed,space_1_completed,completed_without_coaching,coaching_count,audio_audible,technical_failure,accessibility_blocker,motion_discomfort_or_stop,player_mechanic_description,most_memorable_moment,observer_notes
+P01,313ce3bac336e9a669719b57eb892802b44c8c2b,fc4b7252a2c262c0c90f8f74820e35a0afb4f10eac9de63408a019a41c359ef8,,,,,,,,,,,,,,,,,
+P02,313ce3bac336e9a669719b57eb892802b44c8c2b,fc4b7252a2c262c0c90f8f74820e35a0afb4f10eac9de63408a019a41c359ef8,,,,,,,,,,,,,,,,,
+P03,313ce3bac336e9a669719b57eb892802b44c8c2b,fc4b7252a2c262c0c90f8f74820e35a0afb4f10eac9de63408a019a41c359ef8,,,,,,,,,,,,,,,,,
+P04,313ce3bac336e9a669719b57eb892802b44c8c2b,fc4b7252a2c262c0c90f8f74820e35a0afb4f10eac9de63408a019a41c359ef8,,,,,,,,,,,,,,,,,
+P05,313ce3bac336e9a669719b57eb892802b44c8c2b,fc4b7252a2c262c0c90f8f74820e35a0afb4f10eac9de63408a019a41c359ef8,,,,,,,,,,,,,,,,,
+P06,313ce3bac336e9a669719b57eb892802b44c8c2b,fc4b7252a2c262c0c90f8f74820e35a0afb4f10eac9de63408a019a41c359ef8,,,,,,,,,,,,,,,,,
+P07,313ce3bac336e9a669719b57eb892802b44c8c2b,fc4b7252a2c262c0c90f8f74820e35a0afb4f10eac9de63408a019a41c359ef8,,,,,,,,,,,,,,,,,
+P08,313ce3bac336e9a669719b57eb892802b44c8c2b,fc4b7252a2c262c0c90f8f74820e35a0afb4f10eac9de63408a019a41c359ef8,,,,,,,,,,,,,,,,,
