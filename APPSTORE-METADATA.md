@@ -100,32 +100,48 @@ current URLs; this copy pass does not verify their published content.
 
 ## Screenshots Plan
 
-Capture four images at each size below. These are planned captures, not existing
-release screenshots. The app targets device families 1 and 2.
+Global launch numbers `n = 1...8` identify the eight planned states below.
+`scripts/capture-screenshots.sh` captures every state at both sizes: **6.9-inch
+iPhone 1320x2868 px** (`iPhone 18 Pro Max`) and **13-inch iPad 2064x2752 px**
+(`iPad Pro 13-inch (M5)`). The original four selections per device are retained
+in the Selection column; the other captures are available for inspection.
+The app targets device families 1 and 2.
 
-### 6.9-inch iPhone: 1320x2868 px
+| n | Screen | Selection | Device sizes (portrait px) | Capture | Capture path |
+|---|---|---|---|---|---|
+| 1 | Space 1: Doppler | iPhone 1 | iPhone 1320x2868; iPad 2064x2752 | Corridor during movement with the blue color shift visible. | Simulator |
+| 2 | Space 2: Lensing | iPhone 2 | iPhone 1320x2868; iPad 2064x2752 | Spherical room showing the warped surface grid and blue tint. | Simulator |
+| 3 | Space 5: Chromatic Decay | iPhone 3 | iPhone 1320x2868; iPad 2064x2752 | Corridor with partial desaturation on shader-covered surfaces. One desaturation value applies to those surfaces; do not create a grayscale/color split. | Simulator |
+| 4 | Title screen | iPhone 4 | iPhone 1320x2868; iPad 2064x2752 | The actual white "Liminal" title in Menlo on black, frozen at 1.5 seconds in its launch fade. | Simulator |
+| 5 | Space 3: Shadow | iPad 1 | iPhone 1320x2868; iPad 2064x2752 | Open field with the dark floor line visible. | Simulator |
+| 6 | Space 6: Resonance | iPad 2 | iPhone 1320x2868; iPad 2064x2752 | Spherical room with warm tint and the surface displacement visible in the captured frame. | Simulator |
+| 7 | Space 7: Convergence | iPad 3 | iPhone 1320x2868; iPad 2064x2752 | Open field showing the layered color and surface-pattern effects actually visible in the build. | Simulator |
+| 8 | Space 4: Interference | iPad 4 | iPhone 1320x2868; iPad 2064x2752 | A view among lattice beams showing the wave pattern. A still image does not demonstrate sound. | Simulator |
 
-| # | Screen | Capture |
-|---|---|---|
-| 1 | Space 1: Doppler | Corridor during movement with the blue color shift visible. |
-| 2 | Space 2: Lensing | Spherical room showing the warped surface grid and blue tint. |
-| 3 | Space 5: Chromatic Decay | Corridor with partial desaturation on shader-covered surfaces. One desaturation value applies to those surfaces; do not create a grayscale/color split. |
-| 4 | Title screen | The actual white "Liminal" title in Menlo on black during its launch fade. |
+Run `scripts/capture-screenshots.sh` on the dispatcher Mac with Xcode and both
+named simulators installed. It builds Debug once without signing, launches with
+`-AppStoreScreenshot <n>`, and writes `screenshots/appstore/<device-slug>/<nn>.png`.
+`DERIVED` defaults to `.build/shots`; `SHOT_WAIT` defaults to 4 seconds, and
+`SHOT_WAIT_1` through `SHOT_WAIT_8` override the wait for an individual state.
+Screenshot mode requests portrait orientation; the script rejects dimensions
+that differ from the table.
+Generated images and derived build products are ignored by Git.
 
-### 13-inch iPad: 2064x2752 px
+Screenshot mode exists only in Debug. It loads the bundled JSON spaces and uses
+the existing geometry, materials, and rules with fixed player poses and movement
+snapshots. It holds the rule output and shader clock, skips the normal title for
+gameplay, and disables input, settings, debug overlay, audio, haptics, and progression.
+The title capture uses the actual title scene, layout, font, and fade opacity.
+There are no random assets or hardware-only scenes in this plan, so no row requires
+`OPERATOR: capture on device` for missing simulator hardware. No camera imagery is used.
 
-| # | Screen | Capture |
-|---|---|---|
-| 1 | Space 3: Shadow | Open field with the dark floor line visible. |
-| 2 | Space 6: Resonance | Spherical room with warm tint and the surface displacement visible in the captured frame. |
-| 3 | Space 7: Convergence | Open field showing the layered color and surface-pattern effects actually visible in the build. |
-| 4 | Space 4: Interference | A view among lattice beams showing the wave pattern. A still image does not demonstrate sound. |
-
-Capture the Release build on physical devices. Gameplay images should have settings
-closed and no debug overlay. The title image includes its real title text. Do not
-add effects, labels, or a simulated HUD. Inspect the captures before choosing them;
-simulator rendering is not physical-device Metal validation. Later spaces must be
-reached through normal linear progression; there is no chapter selector.
+These are reproducible Debug simulator captures, not verified release screenshots.
+Inspect every image for the planned visible effects before selecting or uploading;
+simulator rendering is not physical-device Metal validation. The Release and
+physical-device checks in the submission checklist remain operator work.
+Gameplay images have no UI or text; the title image retains its real title text
+as explicitly planned. Do not add effects, labels, or a simulated HUD. Normal
+Release progression remains linear with no chapter selector.
 
 ---
 
