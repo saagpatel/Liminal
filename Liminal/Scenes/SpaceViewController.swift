@@ -401,11 +401,26 @@ final class SpaceViewController: UIViewController {
             position = SIMD3(-definition.geometry.scale.x * 0.25, 1.7, 0)
             angles = SIMD3(-0.06, -.pi / 2, 0)
         case .sphere:
-            position = SIMD3(1, 1.7, 2)
-            angles = SIMD3(0.12, -0.4, 0)
+            if index == 6 {
+                // Look tangentially along the nearby wall so its curvature and
+                // ordinary vertex displacement occupy more of the frame.
+                position = SIMD3(definition.geometry.scale.x / 2 - 1, 1.7, 0)
+                angles = SIMD3(-0.10, 0, 0)
+            } else {
+                position = SIMD3(1, 1.7, 2)
+                angles = SIMD3(0.12, -0.4, 0)
+            }
         case .openField:
-            position = index == 5 ? SIMD3(-3, 1.7, 6) : SIMD3(2, 1.7, 5)
-            angles = SIMD3(-0.45, -0.25, 0)
+            if index == 5 {
+                // Frame the real field boundary, facing away from the central
+                // groove: that authored exit hint must stay out of the shot.
+                position = SIMD3(definition.geometry.scale.x / 2 - 3, 1.7,
+                                 definition.geometry.scale.z * 0.2)
+                angles = SIMD3(-0.55, -.pi / 3, 0)
+            } else {
+                position = SIMD3(2, 1.7, 5)
+                angles = SIMD3(-0.45, -0.25, 0)
+            }
         case .lattice:
             position = SIMD3(1, 1.7, 7)
             angles = SIMD3(-0.12, 0.25, 0)
@@ -417,11 +432,15 @@ final class SpaceViewController: UIViewController {
         let speed: Float
         if index == 1 {
             speed = 0.75
+        } else if index == 5 {
+            speed = 0.35
         } else if index == 6 || index == 7 {
             // Read effect parameters from the authored JSON rather than duplicate them.
             let parameters = definition.shader.parameters
+            // Partial resonance retains more of the wall's lighting variation.
+            let falloffFraction: Float = index == 6 ? 0.4 : 0.2
             speed = Float(parameters["resonantSpeed"] ?? 0.55)
-                + Float(parameters["falloffWidth"] ?? 0.15) * 0.2
+                + Float(parameters["falloffWidth"] ?? 0.15) * falloffFraction
         } else {
             speed = 0
         }
