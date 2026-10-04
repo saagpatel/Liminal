@@ -21,6 +21,15 @@ final class SpaceViewController: UIViewController {
     private var settingsPanel: UIView?
 
     #if DEBUG
+    private let appStoreScreenshotIndex: Int? = {
+        let arguments = ProcessInfo.processInfo.arguments
+        guard let flag = arguments.firstIndex(of: "-AppStoreScreenshot") else { return nil }
+        guard arguments.indices.contains(flag + 1),
+              let index = Int(arguments[flag + 1]), (1...8).contains(index) else {
+            fatalError("-AppStoreScreenshot requires a number from 1 through 8")
+        }
+        return index
+    }()
     private var debugOverlay: DebugOverlay?
     private nonisolated(unsafe) var lastFPSTime: TimeInterval = 0
     private nonisolated(unsafe) var frameCount: Int = 0
@@ -33,6 +42,12 @@ final class SpaceViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .black
         setupSCNView()
+        #if DEBUG
+        if let index = appStoreScreenshotIndex {
+            showAppStoreScreenshot(index: index)
+            return
+        }
+        #endif
         setupGestures()
         showTitle()  // show title before loading Space 1
 
@@ -43,6 +58,13 @@ final class SpaceViewController: UIViewController {
 
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        #if DEBUG
+        if appStoreScreenshotIndex != nil {
+            setNeedsUpdateOfSupportedInterfaceOrientations()
+            view.window?.windowScene?.requestGeometryUpdate(.iOS(interfaceOrientations: .portrait))
+            return
+        }
+        #endif
         HapticManager.shared.start()
         // Audio starts after title completes (in showTitle callback)
     }
@@ -55,6 +77,12 @@ final class SpaceViewController: UIViewController {
 
     override var prefersStatusBarHidden: Bool { true }
     override var prefersHomeIndicatorAutoHidden: Bool { true }
+
+    #if DEBUG
+    override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+        appStoreScreenshotIndex == nil ? super.supportedInterfaceOrientations : .portrait
+    }
+    #endif
 
     // MARK: - Scene Setup
 
@@ -90,6 +118,12 @@ final class SpaceViewController: UIViewController {
 
         let titleScene = TitleScene(size: view.bounds.size)
         titleScene.scaleMode = .aspectFill
+        #if DEBUG
+        if appStoreScreenshotIndex == 4 {
+            titleScene.appStoreScreenshotTime = 1.5
+            titleScene.scaleMode = .resizeFill
+        }
+        #endif
         titleScene.onComplete = { [weak self] in
             skView.removeFromSuperview()
             self?.loadSpace(index: 1)
@@ -336,6 +370,86 @@ final class SpaceViewController: UIViewController {
     // MARK: - Debug Overlay
 
     #if DEBUG
+    /// Uses the bundled spaces and their real rules, then holds one gameplay frame.
+    /// No input, audio, haptics, progression, nudge, or overlay runs during capture.
+    private func showAppStoreScreenshot(index: Int) {
+        scnView.delegate = nil
+        scnView.isPlaying = false
+        scnView.sceneTime = 1.25
+        if index == 4 {
+            showTitle()
+            return
+        }
+
+        switch index {
+        case 1: currentSpaceIndex = 1
+        case 2: currentSpaceIndex = 2
+        case 3: currentSpaceIndex = 5
+        case 5: currentSpaceIndex = 3
+        case 6: currentSpaceIndex = 6
+        case 7: currentSpaceIndex = 7
+        case 8: currentSpaceIndex = 4
+        default: preconditionFailure("Invalid screenshot index")
+        }
+        loadSpace(index: currentSpaceIndex)
+        guard let scene = spaceScene, let definition = spaceDefinition else { return }
+
+        let position: SIMD3<Float>
+        let angles: SIMD3<Float>
+        switch definition.geometry.type {
+        case .corridor:
+            position = SIMD3(-definition.geometry.scale.x * 0.25, 1.7, 0)
+            angles = SIMD3(-0.06, -.pi / 2, 0)
+        case .sphere:
+            position = SIMD3(1, 1.7, 2)
+            angles = SIMD3(0.12, -0.4, 0)
+        case .openField:
+            position = index == 5 ? SIMD3(-3, 1.7, 6) : SIMD3(2, 1.7, 5)
+            angles = SIMD3(-0.45, -0.25, 0)
+        case .lattice:
+            position = SIMD3(1, 1.7, 7)
+            angles = SIMD3(-0.12, 0.25, 0)
+        }
+        let camera = scene.playerController.cameraNode
+        camera.simdPosition = position
+        camera.simdEulerAngles = angles
+
+        let speed: Float
+        if index == 1 {
+            speed = 0.75
+        } else if index == 6 || index == 7 {
+            // Read effect parameters from the authored JSON rather than duplicate them.
+            let parameters = definition.shader.parameters
+            speed = Float(parameters["resonantSpeed"] ?? 0.55)
+                + Float(parameters["falloffWidth"] ?? 0.15) * 0.2
+        } else {
+            speed = 0
+        }
+        // One deterministic stillness step gives partial desaturation through the
+        // existing rule. Other shots need only a single ordinary evaluation step.
+        let deltaTime: Float = index == 3
+            ? Float(definition.shader.parameters["maxDesaturationSeconds"] ?? 15) * 0.5
+            : 1.0 / 60.0
+        let playerState = PlayerState(
+            position: position,
+            velocity: camera.simdWorldFront * speed * scene.playerController.baseMovementSpeed * 3,
+            speed: speed,
+            lookDirection: camera.simdWorldFront,
+            idleSeconds: speed == 0 ? deltaTime : 0,
+            deltaTime: deltaTime
+        )
+        let output = scene.ruleEngine.evaluate(playerState: playerState)
+        shaderUniformBus.update(scene.shaderMaterial, uniforms: output.shaderUniforms)
+        scene.shaderMaterial.setValue(Float(0), forKey: "nudgeIntensity")
+
+        // SceneKit's shader clock can advance independently of sceneTime. Freeze
+        // only the clock expression in the existing modifiers, leaving their
+        // authored geometry, patterns, and effect amplitudes intact.
+        scene.shaderMaterial.shaderModifiers = scene.shaderMaterial.shaderModifiers?.mapValues {
+            $0.replacingOccurrences(of: "scn_frame.time", with: "1.25")
+        }
+    }
+
     private func setupDebugOverlay() {
         let overlay = DebugOverlay(frame: CGRect(x: 0, y: 44, width: 200, height: 200))
         overlay.translatesAutoresizingMaskIntoConstraints = false
