@@ -26,10 +26,10 @@ Character counts: Name 21/30; Subtitle 29/30.
 *(100 character limit, comma-separated)*
 
 ```
-atmospheric,exploration,puzzle,abstract,ambient,light,sound,meditative,art
+atmospheric,exploration,puzzle,abstract,ambient,meditative,art,first person,minimalist,indie
 ```
 
-Character count: 74/100
+Character count: 92/100
 
 ---
 
@@ -42,34 +42,34 @@ Seven spaces. Seven hidden rules.
 
 Liminal is a first-person exploration game where the environment is the puzzle. Walk through corridors, spherical rooms, and open fields. Watch the light. Listen to the sound. Experiment with movement and discover what each space asks of you.
 
-Seven spaces, seven rules
+The spaces
 
 Doppler: A corridor of cool color and shifting pitch.
-Lensing: A spherical room with a warped grid pattern and blue-green tint.
+Lensing: A spherical room with a warped grid pattern and blue tint.
 Shadow: An open field with a dark line across its floor.
 Interference: A lattice of beams with wave patterns and changing sound levels.
 Chromatic Decay: A corridor where color fades and returns.
-Resonance: A spherical room with warm tones and rippling surfaces.
+Resonance: A spherical room with rippling surfaces and color that shifts from cool to warm.
 Convergence: An open field that layers visual effects from the earlier spaces.
 
 How Liminal plays
 
-Drag one finger to look. Drag two fingers to move. Pinch to adjust your movement speed multiplier. Observe the relationships. Form a hypothesis. Test it.
+Drag one finger to look. Drag two fingers to move. Pinch to change how fast you move. Observe the relationships. Form a hypothesis. Test it.
 
-Gameplay has no map, HUD, or tutorial. The spaces use visual effects and sound rather than written puzzle instructions. Some spaces can pulse with a visual nudge after you have been idle without making progress.
+There is no map, HUD, or tutorial during play. Each space communicates through light and sound rather than written instructions. If you stall for a while, some spaces pulse to nudge you.
 
 Settings
 
-Tap five times in the top-left corner to open settings for volume, haptic feedback, and control sensitivity. VoiceOver users can choose Open Settings from the Actions rotor. Tap Done to return to the space.
+Settings are hidden on purpose: tap five times in the top-left corner for volume, haptics, and control sensitivity. VoiceOver users will find Open Settings in the Actions rotor.
 
 Audio
 
-Procedural soundscapes are generated on your device. Movement changes pitch in Doppler and Resonance. Position changes sound levels in Interference. Try headphones to hear the soundscape.
+Soundscapes are made on your device. In some spaces movement bends the pitch; in others your position changes what you hear. Headphones recommended.
 
-Liminal is built for iPhone and iPad with iOS 17 or later. No accounts, advertising, or in-app purchases. The game works offline.
+Liminal is built for iPhone and iPad with iOS 17 or later. Play offline, with no accounts, ads, or in-app purchases.
 ```
 
-Character count: 1706/4000
+Character count: 1591/4000
 
 ---
 
@@ -78,10 +78,10 @@ Character count: 1706/4000
 *(170 character limit)*
 
 ```
-Seven spaces. Seven hidden rules. Explore corridors, rooms, and open fields. Watch the light, listen to the sound, and experiment with movement.
+Seven abstract spaces, each with a hidden rule. No map, no HUD, no tutorial. Watch the light, listen, move, and work out what each space wants from you.
 ```
 
-Character count: 144/170
+Character count: 152/170
 
 ---
 
@@ -108,7 +108,7 @@ release screenshots. The app targets device families 1 and 2.
 | # | Screen | Capture |
 |---|---|---|
 | 1 | Space 1: Doppler | Corridor during movement with the blue color shift visible. |
-| 2 | Space 2: Lensing | Spherical room showing the warped surface grid and blue-green tint. |
+| 2 | Space 2: Lensing | Spherical room showing the warped surface grid and blue tint. |
 | 3 | Space 5: Chromatic Decay | Corridor with partial desaturation on shader-covered surfaces. One desaturation value applies to those surfaces; do not create a grayscale/color split. |
 | 4 | Title screen | The actual white "Liminal" title in Menlo on black during its launch fade. |
 
@@ -183,9 +183,9 @@ already passed.
 
 - [ ] Use the Name row exactly: "Liminal: Hidden Rules"; confirm trademark clearance.
 - [ ] Name within 30 characters (21); subtitle within 30 (29).
-- [ ] Keywords within 100 characters (74); no exit-condition hints.
+- [ ] Keywords within 100 characters (92); no exit-condition hints.
 - [ ] Description within 4000 characters; use the plain text block and keep exit conditions out of public copy.
-- [ ] Promotional text within 170 characters (144).
+- [ ] Promotional text within 170 characters (152).
 - [ ] Confirm Support, Marketing, and Privacy Policy URLs are live and suitable; publish the revised privacy policy before submission.
 
 ### Screenshots
