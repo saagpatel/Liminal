@@ -48,19 +48,23 @@ float grid = max(gridX, gridY) * 0.08;
 _output.color.rgb += grid;
 
 // 3. Shadow darkening
+// Fragment positions and normals arrive in view space; uniforms are in world space.
+float3 worldPosition = (scn_frame.inverseViewTransform * float4(_surface.position, 1)).xyz;
+float3 worldNormal = normalize((scn_frame.inverseViewTransform * float4(_surface.normal, 0)).xyz);
 float3 playerPos = float3(playerPositionX, playerPositionY, playerPositionZ);
-float3 toFrag = _surface.position - playerPos;
+float3 toFrag = worldPosition - playerPos;
 float shadowDist = length(float2(toFrag.x, toFrag.z));
 float falloff = 1.0 / (1.0 + shadowDist * 0.1);
-float alignment = max(0.0, -dot(_surface.normal, float3(0, 1, 0)));
+// Upward-facing floor normals align with world up.
+float alignment = max(0.0, dot(worldNormal, float3(0, 1, 0)));
 float shadow = falloff * alignment * shadowIntensity;
 _output.color.rgb *= (1.0 - shadow * 0.3);
 
 // 4. Interference wave pattern
 float3 srcA = float3(sourceAX, sourceAY, sourceAZ);
 float3 srcB = float3(sourceBX, sourceBY, sourceBZ);
-float distA = length(_surface.position - srcA);
-float distB = length(_surface.position - srcB);
+float distA = length(worldPosition - srcA);
+float distB = length(worldPosition - srcB);
 float waveA = sin(distA * waveFrequency) * 0.5 + 0.5;
 float waveB = sin(distB * waveFrequency) * 0.5 + 0.5;
 float interference = (waveA + waveB) * 0.5;
