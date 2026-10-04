@@ -18,7 +18,8 @@ float nudgeIntensity;
 #pragma body
 float3 srcA = float3(sourceAX, sourceAY, sourceAZ);
 float3 srcB = float3(sourceBX, sourceBY, sourceBZ);
-float3 fragPos = _surface.position;
+// Sources are in world space; anchor the pattern independently of the camera.
+float3 fragPos = (scn_frame.inverseViewTransform * float4(_surface.position, 1)).xyz;
 
 float distA = length(fragPos - srcA);
 float distB = length(fragPos - srcB);

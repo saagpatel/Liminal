@@ -8,7 +8,8 @@ float time;
 float3 srcA = float3(-3.0, 0.0, 0.0);
 float3 srcB = float3(3.0, 0.0, 0.0);
 float waveFreq = 8.0;
-float3 fragPos = _surface.position;
+// Sources are in world space; anchor the pattern independently of the camera.
+float3 fragPos = (scn_frame.inverseViewTransform * float4(_surface.position, 1)).xyz;
 
 float distA = length(fragPos - srcA);
 float distB = length(fragPos - srcB);
