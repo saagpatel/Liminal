@@ -1,5 +1,8 @@
 # Liminal — Oddworks Baseline Verification
 
+Historical receipt: the bundle and simulator results below used `com.liminal.app`.
+The current upload candidate uses `com.liminall.app`; these results do not verify it.
+
 - Date: 2026-07-12 PDT
 - Branch: `codex/feat/liminal-oddworks-release-slice-20260712`
 - Base: clean `main` at `29ae1bccd493351cedffb84eaddec3aea55cd4a7`

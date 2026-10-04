@@ -15,6 +15,7 @@ DerivedData/
 # Build
 build/
 builds/
+dist-receipts/
 *.o
 *.swp
 *~
