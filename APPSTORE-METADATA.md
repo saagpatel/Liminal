@@ -113,14 +113,16 @@ The app targets device families 1 and 2.
 | 2 | Space 2: Lensing | iPhone 2 | iPhone 1320x2868; iPad 2064x2752 | Spherical room showing the warped surface grid and blue tint. | Simulator |
 | 3 | Space 5: Chromatic Decay | iPhone 3 | iPhone 1320x2868; iPad 2064x2752 | Corridor with partial desaturation on shader-covered surfaces. One desaturation value applies to those surfaces; do not create a grayscale/color split. | Simulator |
 | 4 | Title screen | iPhone 4 | iPhone 1320x2868; iPad 2064x2752 | The actual white "Liminal" title in Menlo on black, frozen at 1.5 seconds in its launch fade. | Simulator |
-| 5 | Space 3: Shadow | iPad 1 | iPhone 1320x2868; iPad 2064x2752 | Open field with the dark floor line visible. | Simulator |
-| 6 | Space 6: Resonance | iPad 2 | iPhone 1320x2868; iPad 2064x2752 | Spherical room with warm tint and the surface displacement visible in the captured frame. | Simulator |
+| 5 | Space 3: Shadow | iPad 1 | iPhone 1320x2868; iPad 2064x2752 | Oblique view of the open-field boundary during movement, facing away from the exit-hint groove. Shadow divergence remains blocked: the current shader suppresses floor darkening at reachable camera pitches. | Simulator |
+| 6 | Space 6: Resonance | iPad 2 | iPhone 1320x2868; iPad 2064x2752 | Near-wall, tangential view of the spherical room during partial resonance, framing its curvature, warm tint, and authored displacement. Confirm visible surface relief in the recapture. | Simulator |
 | 7 | Space 7: Convergence | iPad 3 | iPhone 1320x2868; iPad 2064x2752 | Open field showing the layered color and surface-pattern effects actually visible in the build. | Simulator |
 | 8 | Space 4: Interference | iPad 4 | iPhone 1320x2868; iPad 2064x2752 | A view among lattice beams showing the wave pattern. A still image does not demonstrate sound. | Simulator |
 
 Run `scripts/capture-screenshots.sh` on the dispatcher Mac with Xcode and both
 named simulators installed. It builds Debug once without signing, launches with
 `-AppStoreScreenshot <n>`, and writes `screenshots/appstore/<device-slug>/<nn>.png`.
+Before the first capture on each device, it launches the app once, waits 2 seconds,
+then terminates it to clear the cross-app back link from subsequent launches.
 `DERIVED` defaults to `.build/shots`; `SHOT_WAIT` defaults to 4 seconds, and
 `SHOT_WAIT_1` through `SHOT_WAIT_8` override the wait for an individual state.
 Screenshot mode requests portrait orientation; the script rejects dimensions
