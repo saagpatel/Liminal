@@ -90,6 +90,11 @@ capture_device() {
     output_dir="screenshots/appstore/$slug"
     mkdir -p "$output_dir"
 
+    # Prime the launch history so captures do not show a cross-app back link.
+    xcrun simctl launch "$id" "$BUNDLE_ID" -AppStoreScreenshot 1
+    sleep 2
+    xcrun simctl terminate "$id" "$BUNDLE_ID" >/dev/null 2>&1 || true
+
     # Global shot numbers match APPSTORE-METADATA.md. Capture all eight at both
     # sizes; the plan identifies the original four selections for each device.
     for n in 1 2 3 4 5 6 7 8; do
@@ -109,7 +114,7 @@ capture_device() {
             fail "$png is ${width}x${height}; expected ${expected_width}x${expected_height}. Check the device model and portrait orientation."
         echo "Captured $png (${width}x${height})"
     done
-    xcrun simctl terminate "$id" "$BUNDLE_ID"
+    xcrun simctl terminate "$id" "$BUNDLE_ID" >/dev/null 2>&1 || true
 }
 
 capture_device "$iphone" iphone-18-pro-max 1320 2868
