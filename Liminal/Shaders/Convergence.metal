@@ -15,8 +15,12 @@ float playerPositionZ;
 float shadowIntensity;
 // Interference
 float cancellationFactor;
-float sourceAX; float sourceAY; float sourceAZ;
-float sourceBX; float sourceBY; float sourceBZ;
+float sourceAX;
+float sourceAY;
+float sourceAZ;
+float sourceBX;
+float sourceBY;
+float sourceBZ;
 float waveFrequency;
 // ChromaticDecay
 float desaturation;
