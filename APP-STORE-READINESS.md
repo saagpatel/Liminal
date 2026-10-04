@@ -4,8 +4,10 @@ Prepared 2026-10-04 for dispatcher review. Source preparation is complete;
 copy accuracy findings are resolved; operator verification remains. No signing, archive,
 export, upload, Keychain access, or App Store Connect action was performed.
 The store facts below are supplied by the dispatcher, not independently fetched.
-Copy-only follow-up changes metadata, privacy policy, and this report. Earlier
-preparation checks below are retained evidence, not rerun by this copy worker.
+This editorial follow-up changes metadata and this report. `PRIVACY.md` already
+matches both reviews and remains unchanged; no in-app string fixes were requested
+for Liminal. Earlier preparation checks below are retained evidence, not rerun
+by this copy worker. Current copy checks are listed separately at the end.
 This report is prepared for a dispatcher commit; this worker does not write Git state.
 
 | Item | Status | Evidence |
@@ -24,19 +26,21 @@ This report is prepared for a dispatcher commit; this worker does not write Git 
 | 7. App Store icon | PASS | `Liminal/Resources/Assets.xcassets/AppIcon.appiconset/Contents.json` references `AppIcon.png`; `sips` confirms 1024×1024, `hasAlpha: no`. Artwork preserved; no flattening needed. |
 | 8. Release hygiene | FIXED | Existing DebugOverlay, FPS instrumentation, and all print calls are DEBUG guarded. `Liminal/Scenes/SpaceScene.swift` now keeps diagnostic solid-red fallback behind DEBUG; Release throws on missing/unreadable fragment shader and uses the existing load-error alert path. No test fixtures or simulated input are wired to gameplay. Procedural audio is the intended production soundscape. Runtime Release verification remains outside sandbox. |
 | Archive scheme isolation | PASS | `Liminal.xcodeproj/xcshareddata/xcschemes/Liminal.xcscheme` archives Release and includes only Liminal as an archive build entry. ShaderLab and test targets are not archive entries; app target has no dependency on ShaderLab. |
-| 9. Metadata factual coverage | PASS | Copy truth pass checked the public description, promotional text, keywords, screenshot plan, review notes, and checklist against current source. Unsupported factual claims and public exit hints removed; metadata 2.3 resolutions follow. Store settings and device results remain operator checks. |
+| 9. Metadata factual coverage | PASS | Editorial follow-up applied Fable wording subject to Sonnet accuracy findings and the task spec. Rechecked Lensing and Resonance shaders, movement/position audio rules, nudge dispatch, gestures/settings, and local preference storage. Public audio copy omits which spaces respond to movement or position. Unsupported audible-nudge wording omitted; the code gap is recorded below. Store settings and device results remain operator checks. |
 | Final store name | FIXED | Name row preserved as **Liminal: Hidden Rules**; the Submission Checklist now uses that exact name instead of the old **Liminal** value. |
 | Metadata 2.3 risk: absolute no-text/no-buttons/no-other-input claims | FIXED | Description and promotional text no longer claim absolute absence of text, instructions, buttons, or other input. Review notes list the real title, settings labels, Done button, VoiceOver action, and error alerts; gameplay-only no-HUD wording retained. |
-| Metadata 2.3 risk: Lensing geometry bending | FIXED | Description and screenshot plan now describe the warped surface grid and blue-green tint from `Liminal/Shaders/Lensing.metal`, with no geometry-bending claim. |
+| Metadata 2.3 risk: Lensing geometry bending | FIXED | Description and screenshot plan describe the warped surface grid and blue tint from `Liminal/Shaders/Lensing.metal` (`proxTint = float3(0.2, 0.5, 0.8)`), with no geometry-bending claim. Sonnet and task-spec correction applied. |
+| Metadata 2.3 risk: unconditional Resonance warmth | FIXED | Description now says color shifts from cool to warm, rather than promising constant warm tones. `Liminal/Shaders/Resonance.metal` blends neutral and warm color by resonance; `Liminal/Spaces/Rules/ResonanceRule.swift` varies resonance with speed. The screenshot plan requests a warm frame, not constant warmth. Sonnet correction applied without an exit hint. |
 | Metadata 2.3 risk: Interference wave cancellation | FIXED | Description now says wave patterns and changing sound levels, matching visual patterns and amplitude control; removed audio phase-cancellation and find-the-silence claims. |
 | Metadata 2.3 risk: all six simultaneous exit constraints | FIXED | Convergence description now describes layered visual effects; removed the claim that one position and speed satisfy all six earlier exit conditions and removed the public solution hint. |
-| Metadata 2.3 risk: dynamic reverb/spatial source behavior | FIXED | Description now names implemented pitch and sound-level changes; removed movement-driven reverb, independent 3D source positioning, and the spatial keyword. Physical audio behavior remains unverified. |
+| Metadata 2.3 risk: dynamic reverb/spatial source behavior | FIXED | Description uses Fable's unnamed movement/pitch and position/sound wording, supported by `DopplerRule.swift`, `ResonanceRule.swift`, `InterferenceRule.swift`, and `AudioManager.updateParameters`. It keeps out movement-driven reverb and independent 3D source-positioning promises and the spatial keyword. Physical audio behavior remains unverified. |
 | Metadata 2.3 risk: 60 fps/all devices/Metal validation | FIXED | Removed guaranteed frame rate, all-device support, and completed Metal-validation claims. Copy states iPhone/iPad targeting with iOS 17 or later; checklist keeps device rendering and measured performance pending. |
-| Metadata 2.3 risk: fairness/discoverability/completion time | FIXED | Removed reliable-progress/fairness promises, environment-tells-you-everything language, and the 30-60-minute completion estimate. Nudge copy is limited to conditional visual pulses; playtest outcomes remain pending. |
+| Metadata 2.3 risk: fairness/discoverability/completion time | FIXED | Removed reliable-progress/fairness promises, environment-tells-you-everything language, and the 30-60-minute completion estimate. Nudge copy now says some spaces pulse if you stall, per Fable and the task spec; it promises no audible nudge. Playtest outcomes remain pending. |
+| Nudge audio implementation | UNKNOWN | Sonnet and the task spec describe a light-and-sound pulse, but source inspection finds `RuleEngine.swift:70-71,90-91` emits `nudgeVolume` while `AudioManager.swift:183-204` consumes only pitch and amplitude. `SpaceViewController.swift:391` passes the parameters through without handling that key. Shader pulses have source support; an audible nudge does not. No logic change made in this copy-only task. |
 | Metadata 2.3 risk: Chromatic screenshot composition | FIXED | Screenshot plan requests partial desaturation across the view on shader-covered surfaces using one uniform value; removed the unsupported grayscale-left/colored-right split. |
 | Metadata 2.3 risk: screenshot text contradiction | FIXED | Screenshot plan and checklist explicitly allow the real Liminal title text in the title capture and require settings closed for gameplay captures; removed the blanket ban on screenshot text. |
 | Metadata 2.3 risk: Doppler geometry change | FIXED | Review-only Space 1 notes now name blue color shift and rising pitch; removed corridor geometry change as a signal and explain that drag motion, not pinch or stationary touch alone, drives speed. |
-| Metadata 2.3 risk: counts | FIXED | Python counts of the exact submission strings: Name 21/30, Subtitle 29/30, Keywords 74/100, Promotional Text 144/170, Description 1706/4000; metadata count annotations corrected. |
+| Metadata 2.3 risk: counts | FIXED | Python counts of the exact submission strings: Name 21/30, Subtitle 29/30, Keywords 92/100, Promotional Text 152/170, Description 1591/4000; metadata count annotations and checklist corrected. Name and subtitle unchanged. |
 | Metadata 2.3 risk: review attachment | FIXED | Removed the offer of a nonexistent solution attachment. Notes supply the configured Space 1 condition directly and a settings inspection path requiring no puzzle completion; device completion procedure remains unverified. |
 | Metadata 2.3 risk: unchecked requirements | OPERATOR | Checklist now labels all unchecked items as pending tasks, removes asserted TestFlight solve/crash outcomes, and asks for measured performance rather than promising 60 fps. Public space descriptions omit exit conditions. Archive, binary size, hardware behavior, external playtests, and upload-candidate review steps still require dispatcher evidence. |
 | Other store metadata/URLs | OPERATOR | SKU, categories, age rating, price, territories, trademark clearance, URL reachability/marketing suitability, and copyright ownership cannot be established from code. Metadata now labels store choices as values to confirm; Support/privacy URLs match README and PRIVACY.md, but published content was not fetched. Confirm screenshot count and preview format requirements before submission. |
@@ -44,6 +48,13 @@ This report is prepared for a dispatcher commit; this worker does not write Git 
 | Screenshots | OPERATOR | Families `1,2` require task-specified **6.9-inch iPhone 1320×2868** and **13-inch iPad 2064×2752**. Both existing `screenshots/screenshot-*.png` are 1290×2796; historical baseline excludes them as current release proof. Dispatcher must capture accurate physical-device scenes at both sizes. |
 | Physical-device checks | NOT RUN | Metal visuals/API validation, haptics, spatial audio, every-space gameplay, gesture feel, and Instruments performance require physical devices. Simulator results are not device shader proof. |
 | Build and unit tests | NOT RUN | dispatcher verifies outside the sandbox. Full Xcode is unavailable and simulator service is inaccessible; no xcodebuild, simctl, make test, or SwiftPM build attempted. |
+
+## Earlier preparation checks (retained, not rerun)
+
+These rows describe the earlier source-preparation pass, not this editorial diff.
+
+| Item | Status | Evidence |
+|---|---|---|
 | Xcode project generation | PASS | `xcodegen generate` exited 0. Tracked project regenerated; shared schemes unchanged. Git status contains only the scoped identity/docs, shader guard, lane/ignore, and readiness report changes. |
 | Swift syntax, Release | PASS | `swiftc -frontend -parse Liminal/Scenes/SpaceScene.swift` exited 0; this is the only changed Swift file. Parsing does not type-check SDK integration. |
 | Swift syntax, Debug | PASS | `swiftc -frontend -parse -D DEBUG Liminal/Scenes/SpaceScene.swift` exited 0. |
@@ -55,3 +66,13 @@ This report is prepared for a dispatcher commit; this worker does not write Git 
 | Existing screenshot dimensions | PASS | `sips -g pixelWidth -g pixelHeight screenshots/screenshot-1.png screenshots/screenshot-2.png` exited 0; both are 1290×2796, confirming the screenshot operator gap above. |
 | Icon inspection | PASS | `sips -g pixelWidth -g pixelHeight -g hasAlpha Liminal/Resources/Assets.xcassets/AppIcon.appiconset/AppIcon.png` exited 0: 1024, 1024, no. |
 | Diff whitespace | PASS | `git diff --check` exited 0. |
+
+## Current editorial verification
+
+| Item | Status | Evidence |
+|---|---|---|
+| Submission fields | PASS | `python3 -c` extracted the exact Name/Subtitle table values and Keywords/Description/Promotional Text fenced content. Counts: 21/30, 29/30, 92/100, 1591/4000, 152/170. Limits, count annotations, unchanged Name/Subtitle, and scoped changed paths were asserted. |
+| Unicode dash scan | PASS | `grep -nE $'\u2014|\u2013' APPSTORE-METADATA.md APP-STORE-READINESS.md` found no matches (exit 1, the expected no-match result) across both changed files. |
+| Swift parsing, plain and DEBUG | NOT RUN | No Swift files changed; `swiftc -frontend -parse` and its `-D DEBUG` variant are inapplicable to this diff. No type-check or SDK build performed. |
+| Plist lint/project generation | NOT RUN | No plist or `project.yml` changed; `plutil -lint` and `xcodegen generate` are inapplicable to this diff. |
+| Diff whitespace | PASS | Current `git diff --check` exited 0. No Git write commands run. |
