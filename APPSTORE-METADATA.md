@@ -4,9 +4,9 @@
 
 | Field | Value |
 |---|---|
-| Name | Liminal |
+| Name | Liminal: Hidden Rules |
 | Subtitle | Find the Rule. Find the Exit. |
-| Bundle ID | com.liminal.app |
+| Bundle ID | com.liminall.app |
 | SKU | LIMINAL-001 |
 | Primary Category | Games |
 | Secondary Category | Entertainment |
@@ -97,7 +97,7 @@ Character count: 152
 | Field | URL |
 |---|---|
 | Support URL | https://github.com/saagpatel/Liminal/issues |
-| Marketing URL | https://[placeholder]/liminal |
+| Marketing URL | https://github.com/saagpatel/Liminal/issues |
 | Privacy Policy URL | https://github.com/saagpatel/Liminal/blob/main/PRIVACY.md |
 
 *Replace with actual URLs before submission.*

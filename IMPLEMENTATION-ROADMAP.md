@@ -337,7 +337,7 @@ Parameter updates use `AVAudioUnit.auAudioUnit.parameterTree` for sample-accurat
 **Objective:** Xcode project configured correctly as Universal; `LiminalShaderLab` target running a validated Metal shader; Swift fundamentals practiced in playgrounds before touching game code.
 
 **Tasks:**
-1. Create Xcode project: Universal App, SwiftUI lifecycle, iOS 17.0 deployment target, Bundle ID `com.[yourname].liminal` — **Acceptance:** Builds and runs on iPhone 15 simulator + iPad Air (5th gen) simulator with zero errors and zero warnings
+1. Create Xcode project: Universal App, SwiftUI lifecycle, iOS 17.0 deployment target, Bundle ID `com.liminall.app` — **Acceptance:** Builds and runs on iPhone 15 simulator + iPad Air (5th gen) simulator with zero errors and zero warnings
 2. Create `LiminalShaderLab` as second target in same `.xcodeproj`: `UIKit` lifecycle, single `SCNView` displaying a `SCNBox` with SceneKit's default lighting — **Acceptance:** Rotating cube renders on both simulators at 60fps; Metal layer visible in Xcode's View Hierarchy debugger
 3. Write `TestShaders/DopplerTest.metal` as `SCNShaderModifierEntryPointFragment` that cycles cube color based on `sin(time)` uniform — **Acceptance:** Cube visibly cycles warm→cool over 2 seconds in ShaderLab; Metal GPU Frame Capture shows no API validation errors; uniform values visible in debugger
 4. Wire `CADisplayLink` in `ShaderLabViewController` calling `renderer.updateAtTime` to push `time` uniform via `SCNMaterialProperty.setValue(_:forKey:)` at 60fps — **Acceptance:** Color cycle is smooth (no frame drops below 58fps in Instruments → GPU); uniform value updates visible in Xcode's Metal Debugger
