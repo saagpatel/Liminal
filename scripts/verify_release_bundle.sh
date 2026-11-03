@@ -4,7 +4,8 @@ set -eu
 APP="${1:?usage: verify_release_bundle.sh /path/to/Liminal.app}"
 
 test -x "$APP/Liminal"
-test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Info.plist")" = "com.liminal.app"
+test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleIdentifier' "$APP/Info.plist")" = "com.liminall.app"
+test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleVersion' "$APP/Info.plist")" = "4"
 test "$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP/Info.plist")" = "1.0.0"
 test "$(/usr/libexec/PlistBuddy -c 'Print :ITSAppUsesNonExemptEncryption' "$APP/Info.plist")" = "false"
 test -f "$APP/PrivacyInfo.xcprivacy"

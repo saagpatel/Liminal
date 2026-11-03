@@ -5,6 +5,10 @@ import simd
 /// Dispatches to the correct geometry builder, rule, exit condition, and lighting
 /// based on the definition's types — all driven by JSON, no hardcoding.
 final class SpaceScene {
+    private enum ShaderLoadError: Error {
+        case fragmentUnavailable(String)
+    }
+
     let scene: SCNScene
     let ruleEngine: RuleEngine
     let playerController: PlayerController
@@ -14,7 +18,7 @@ final class SpaceScene {
         scene = SCNScene()
 
         // 1. Shader material (generic — loads by shader.name)
-        shaderMaterial = SpaceScene.createShaderMaterial(shader: definition.shader)
+        shaderMaterial = try SpaceScene.createShaderMaterial(shader: definition.shader)
 
         // 2. Geometry dispatch
         let geometryNode = switch definition.geometry.type {
@@ -415,7 +419,7 @@ final class SpaceScene {
 
     // MARK: - Material + Shader (generic)
 
-    private static func createShaderMaterial(shader: ShaderConfig) -> SCNMaterial {
+    private static func createShaderMaterial(shader: ShaderConfig) throws -> SCNMaterial {
         let material = SCNMaterial()
         material.diffuse.contents = UIColor(white: 0.7, alpha: 1.0)
         material.lightingModel = .physicallyBased
@@ -437,14 +441,16 @@ final class SpaceScene {
             modifiers[.geometry] = geoSource
         }
 
-        if modifiers.isEmpty {
+        if modifiers[.fragment] == nil {
             #if DEBUG
             print("[SpaceScene] Failed to load \(shader.name).metal — using fallback red shader")
-            #endif
             modifiers[.fragment] = """
             #pragma body
             _output.color = float4(1.0, 0.0, 0.0, 1.0);
             """
+            #else
+            throw ShaderLoadError.fragmentUnavailable(shader.name)
+            #endif
         }
 
         material.shaderModifiers = modifiers

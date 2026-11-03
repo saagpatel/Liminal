@@ -21,6 +21,9 @@ Liminal is a first-person atmospheric exploration game for iPhone and iPad. Seve
 - Xcode 16+
 - iOS 17.0+ device or simulator
 
+App Store bundle ID: `com.liminall.app`. The upload candidate uses build `4`
+and the existing marketing version `1.0.0`; the dispatcher aligns the store version.
+
 ### Installation
 ```bash
 git clone https://github.com/saagpatel/Liminal

@@ -1,5 +1,8 @@
 # Liminal — Portfolio Disposition
 
+Upload candidate (2026-10-04): bundle ID `com.liminall.app`. The identity rows
+below reflect that correction; the historical verification used `com.liminal.app`.
+
 **Status:** Release Frozen (iOS App Store) — SwiftUI + SceneKit +
 Metal atmospheric exploration / puzzle game on `origin/main` with
 full App Store submission scaffolding (`APPSTORE-METADATA.md`,
@@ -43,7 +46,7 @@ Specifically verified on `origin/main`:
   - AI-generated icon
 - App Store identity:
   - Name: **Liminal**, Subtitle: **Find the Rule. Find the Exit.**
-  - Bundle ID: `com.liminal.app`, SKU: `LIMINAL-001`
+  - Bundle ID: `com.liminall.app`, SKU: `LIMINAL-001`
   - Categories: **Games** (primary) + **Entertainment** (secondary)
   - Age Rating: 4+, **Price: $4.99**, Availability: All territories
 - Default branch: `main`
@@ -170,7 +173,7 @@ work than static screenshots).
 | `origin/main` tip | `ad9fe97` chore: replace placeholder icon with AI-generated app icon |
 | Default branch | `main` |
 | Build system | iOS / Swift / SwiftUI / **SceneKit + Metal** / XcodeGen (project.yml) / XCTest |
-| Bundle ID | `com.liminal.app` |
+| Bundle ID | `com.liminall.app` |
 | App Store category | **Games** (primary) + Entertainment |
 | Price | **$4.99** (first paid iOS cluster member) |
 | Phases shipped | Feature-complete per memory; full App Store prep cadence on canonical main |

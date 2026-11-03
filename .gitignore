@@ -13,8 +13,11 @@ DerivedData/
 *.dSYM
 
 # Build
+.build/shots/
+screenshots/appstore/
 build/
 builds/
+dist-receipts/
 *.o
 *.swp
 *~
