@@ -3,7 +3,7 @@
 Upload candidate (2026-10-04): bundle ID `com.liminall.app`. The identity rows
 below reflect that correction; the historical verification used `com.liminal.app`.
 
-**Status:** Release Frozen (iOS App Store) — SwiftUI + SceneKit +
+**Status:** Active Release (iOS App Store) — SwiftUI + SceneKit +
 Metal atmospheric exploration / puzzle game on `origin/main` with
 full App Store submission scaffolding (`APPSTORE-METADATA.md`,
 DEVELOPMENT_TEAM, Privacy Manifest, scheme generation, copyright in
@@ -17,6 +17,23 @@ paid-app iOS cluster member**, distinct from Calibrate / Chromafield
 > Disposition uses strict `origin/main` verification.
 > **Introduces paid-app as a relevant operator concern axis** —
 > not a new sub-shape, but a meaningful distinction.
+
+
+## Release state (November 3, 2026)
+
+Reactivated from Release Frozen; v1.0.0 is being prepared for App Store submission.
+
+- `main` carries the scripted store-screenshot mode and shader fixes. `make verify`
+  passes, and an unsigned Release archive (`com.liminall.app`, 1.0.0) builds.
+- **Signing is pending.** The target uses automatic signing but has no profile for
+  `com.liminall.app` yet; it waits on the operator turning on automatic signing in
+  Xcode. `ExportOptions.plist` expects the manual `Liminal App Store` profile, so
+  align the two when signing is set up.
+- Still open before upload: choose 4 of the scripted screenshots per device, a
+  Metal check on a physical device, the App Store Connect record and pricing, then a
+  signed export. Upload and TestFlight need the operator's OK.
+
+The sections below are the original Release Frozen disposition, kept for history.
 
 ---
 
@@ -142,7 +159,7 @@ work than static screenshots).
 
 | Aspect | Posture |
 |---|---|
-| Portfolio status | `Release Frozen (iOS App Store, local-first, paid)` |
+| Portfolio status | `Active Release (iOS App Store, local-first, paid)` |
 | Distribution channel | **App Store Connect** — Games (primary) + Entertainment (secondary), $4.99 |
 | Pricing model | **Paid up-front** (first paid iOS cluster member) |
 | Review cadence | Suspend overdue counting |
