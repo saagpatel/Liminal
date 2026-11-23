@@ -1,37 +1,37 @@
 # Liminal
 
-[![Swift](https://img.shields.io/badge/Swift-f05138?style=flat-square&logo=swift)](#) [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](#)
+[![Swift](https://img.shields.io/badge/Swift-f05138?style=flat-square&logo=swift)](#tech-stack) [![License](https://img.shields.io/badge/license-MIT-blue?style=flat-square)](LICENSE)
 
 > Find the rule. Find the exit.
 
-Liminal is a first-person atmospheric exploration game for iPhone and iPad. Seven abstract spaces. No instructions. No HUD. Each space operates by a hidden rule — a relationship between your movement, the light, the sound, and the geometry. Discover the rule through observation. Find the exit by mastering it.
+Liminal is a first-person atmospheric exploration game for iPhone and iPad. Seven abstract spaces. No tutorial. Each space operates by a hidden rule — a relationship between your movement, the light, the sound, and the geometry. Discover the rule through observation. Find the exit by mastering it.
 
 ## Features
 
 - **Seven distinct spaces** — each defined by a unique rule: chromatic decay, convergence, Doppler-shifted audio, interference patterns, gravitational lensing, resonance, and shadow
-- **Metal shaders per space** — custom `.metal` shader for each rule; the shader and the Swift rule type share a common protocol, keeping logic and visuals in sync
-- **JSON-driven configuration** — all space geometry, shader parameters, audio, and exit conditions are defined in JSON, loaded at runtime
-- **Live rule evaluation** — a `RuleEngine` evaluates player position, velocity, speed, and idle time every frame, producing shader uniforms and audio parameters in real time
+- **Metal shaders per space** — each space has a fragment shader modifier, and resonance and convergence also have geometry modifiers
+- **JSON-driven configuration** — each space file selects the geometry type and configures its dimensions, shader, audio, exit condition, and idle nudge
+- **Live rule evaluation** — each frame, `RuleEngine` evaluates the active rule against the player’s state to produce shader uniforms and audio parameters
 - **AVAudioEngine audio** — spatial audio with real-time parameter modulation tied directly to movement and rule state
-- **No HUD, no instructions** — the entire game communicates through environmental feedback
+- **No gameplay HUD in Release builds** — light, sound, and geometry give clues to each rule. Debug builds show a diagnostic overlay.
 
 ## Quick Start
 
 ### Prerequisites
-- Xcode 16+
-- iOS 17.0+ device or simulator
+- A Mac with Xcode 16+
+- An iOS 17.0+ simulator runtime or a compatible iPhone or iPad running 17.0+
 
-App Store bundle ID: `com.liminall.app`. The upload candidate uses build `4`
-and the existing marketing version `1.0.0`; the dispatcher aligns the store version.
+The app uses bundle ID `com.liminall.app`, marketing version `1.0.0`, and build `4`. To run on a device, select your team and a bundle ID it can provision in Xcode’s Signing & Capabilities tab.
 
 ### Installation
 ```bash
 git clone https://github.com/saagpatel/Liminal
+cd Liminal
 open Liminal.xcodeproj
 ```
 
 ### Usage
-Build and run. Swipe to move, tilt to look. No other instructions — that's the game.
+Select the `Liminal` scheme and your simulator or device in Xcode, then build and run. Drag with one finger to look, drag with two fingers to move, and pinch to adjust speed. Tap the top-left corner five times to open settings.
 
 ## Tech Stack
 
@@ -39,13 +39,15 @@ Build and run. Swipe to move, tilt to look. No other instructions — that's the
 |-------|------------|
 | Language | Swift 6.0, strict concurrency |
 | 3D rendering | SceneKit |
-| GPU effects | Metal (custom `.metal` shader per space) |
+| GPU effects | Metal shader modifiers on SceneKit materials |
 | Audio | AVAudioEngine with real-time parameter modulation |
-| Configuration | JSON space definitions decoded at launch |
+| Configuration | Bundled JSON decoded as each space loads |
 
 ## Architecture
 
-Each space is represented by a `SpaceDefinition` decoded from JSON, which references a shader name, a `RuleType` enum value, an audio preset, and an exit condition expression. At runtime, the `SpaceLoader` compiles the associated Metal shader into a `SCNProgram` and attaches it to the scene graph. The `RuleEngine` runs on `CADisplayLink` and writes a `simd_float4x4` uniform buffer that both the Metal shader and the AVAudioEngine parameter automation consume on the same tick, keeping visuals and audio synchronized without a separate message-passing step.
+`SpaceLoader` decodes each space’s JSON into a `SpaceDefinition`. `SpaceScene` uses the shader name to select a Swift `SpaceRule` and load the matching Metal modifiers onto a SceneKit material. It uses the exit condition’s name and parameters to configure the exit check.
+
+In SceneKit’s per-frame render callback, `RuleEngine` evaluates the player state. `ShaderUniformBus` writes the resulting uniforms to the material by name. The callback sends audio parameters and the listener position to `AudioManager` on the main queue.
 
 ## License
 
